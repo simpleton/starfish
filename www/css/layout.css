@@ -1,0 +1,21 @@
+div#sidebar{
+    width: 200px;
+    height: 100%;
+    float:left;
+    margin:auto;
+
+}
+div#main{
+    width: 800px;
+    margin: 10px auto;
+}
+div#main_panel{
+    width: 550px;
+    margin:auto;
+    height: 600px;
+    float:left;
+}
+
+#http_param{
+    width: 100%;
+}

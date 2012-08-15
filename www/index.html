@@ -6,7 +6,7 @@
     <script src ="js/jquery/jquery.form.js"></script>
     <script src ="js/jquery/jquery.sha1.js"></script>
     <link rel=stylesheet type=text/css href=css/ui-lightness/jquery-ui-1.8.22.custom.css />
-    <link rel=stylesheet type=text/css href=css/starfish.css />
+    <link rel=stylesheet type=text/css href=css/layout.css />
 </head>
 <body>
 
@@ -14,14 +14,34 @@
 
 
 <div id="main">
-    <div id="sidebar">测试</div>
-    <div id="main_panel">测试1</div>
+    <div id="sidebar">
+        <div id="hello_test">hello</div>
+    </div>
+    <div id="main_panel">
+        <input id="http_param"> </input>
+        <div id="record">测试窗口</div>
+    </div>
 </div>
 
 <script>
     $(document).ready(function() {
         $.starfish = {};
         $.starfishd_url = "/starfish";
+        $("#hello_test").button().bind('click', function(){
+            $.ajax({
+                type:"GET",
+                url:$.starfishd_url + "/hello?" + $('#http_param').val(),
+
+                contentType: "application/json; charset=utf-8",
+                success:function(data) {
+
+
+                    $("#record").html(data);
+
+                },
+                dataType:"html"
+            });
+        });
     });
 
 </script>

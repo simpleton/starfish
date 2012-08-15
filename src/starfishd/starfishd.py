@@ -3,8 +3,8 @@ __author__ = 'xbfool'
 import web
 
 urls = (
-    '/', 'hello',
-#    '/user/add/info', 'user_add',
+    '/hello', 'hello',
+    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',
 #    '/user/info/all', 'user_info_all',
@@ -15,11 +15,13 @@ app = web.application(urls, globals())
 
 class hello:
     def GET(self):
-
-        return 'Hello !'
+        user_data = web.input()
+        print user_data
+        return 'Hello ! %s' % user_data.get('name');
 
 class user_add:
     def POST(self):
+
         pass
 
 class user_update:
