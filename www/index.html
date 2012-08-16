@@ -5,6 +5,7 @@
     <script src ="js/jquery/jquery-ui-1.8.22.custom.min.js"></script>
     <script src ="js/jquery/jquery.form.js"></script>
     <script src ="js/jquery/jquery.sha1.js"></script>
+    <script src ="js/starfish.js"></script>
     <link rel=stylesheet type=text/css href=css/ui-lightness/jquery-ui-1.8.22.custom.css />
     <link rel=stylesheet type=text/css href=css/layout.css />
 </head>
@@ -16,6 +17,7 @@
 <div id="main">
     <div id="sidebar">
         <div id="hello_test">hello</div>
+        <div id="user_add_test">user_add</div>
     </div>
     <div id="main_panel">
         <input id="http_param"> </input>
@@ -31,13 +33,9 @@
             $.ajax({
                 type:"GET",
                 url:$.starfishd_url + "/hello?" + $('#http_param').val(),
-
                 contentType: "application/json; charset=utf-8",
                 success:function(data) {
-
-
                     $("#record").html(data);
-
                 },
                 dataType:"html"
             });

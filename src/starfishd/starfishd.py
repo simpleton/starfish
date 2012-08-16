@@ -1,7 +1,7 @@
 __author__ = 'xbfool'
 
 import web
-
+import redis
 urls = (
     '/hello', 'hello',
     '/user/add/info', 'user_add',
@@ -17,7 +17,7 @@ class hello:
     def GET(self):
         user_data = web.input()
         print user_data
-        return 'Hello ! %s' % user_data.get('name');
+        return 'Hello ! %s' % user_data.get('name')
 
 class user_add:
     def POST(self):
