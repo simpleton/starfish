@@ -5,6 +5,7 @@ div#sidebar{
     margin:auto;
 
 }
+
 div#main{
     width: 800px;
     margin: 10px auto;
@@ -12,7 +13,6 @@ div#main{
 div#main_panel{
     width: 550px;
     margin:auto;
-    height: 600px;
     float:left;
 }
 

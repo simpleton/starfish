@@ -15,13 +15,16 @@
 
 
 <div id="main">
+
     <div id="sidebar">
-        <div id="hello_test">hello</div>
-        <div id="user_add_test">user_add</div>
+        <ul>
+
+            <li><div id="hello_test">hello</div></li>
+            <li><div id="user_add_test">user_add</div></li>
+        </ul>
+        <div id="do_request">RUN!</div>
     </div>
     <div id="main_panel">
-        <input id="http_param"> </input>
-        <div id="record">测试窗口</div>
     </div>
 </div>
 
@@ -29,15 +32,12 @@
     $(document).ready(function() {
         $.starfish = {};
         $.starfishd_url = "/starfish";
-        $("#hello_test").button().bind('click', function(){
-            $.ajax({
-                type:"GET",
-                url:$.starfishd_url + "/hello?" + $('#http_param').val(),
-                contentType: "application/json; charset=utf-8",
-                success:function(data) {
-                    $("#record").html(data);
-                },
-                dataType:"html"
+        $("#sidebar div").button().bind('click', function(){
+            alert('not implement now!');
+        });
+        $("#hello_test").button().unbind().bind('click', function(){
+            $('#main_panel').load('html/hello.html', function(){
+                $('#do_request').button().unbind().bind('click', hello_test);
             });
         });
     });
