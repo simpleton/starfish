@@ -1,21 +1,35 @@
 div#sidebar{
-    width: 200px;
     height: 100%;
     float:left;
-    margin:auto;
-
+    margin:10px 10px;
+    width:20%;
 }
 
 div#main{
-    width: 800px;
+    width: 90%;
     margin: 10px auto;
 }
 div#main_panel{
-    width: 550px;
-    margin:auto;
+    margin:10px 10px;
     float:left;
+    border-color: black;
+    border-width: 1px;
+    border-style: solid;
+    height:100%;
 }
 
 #http_param{
     width: 100%;
+}
+
+#sidebar div{
+    width:100%;
+}
+
+#run_url{
+    width:600px;
+}
+#main_panel textarea{
+    width:600px;
+    height:200px;
 }

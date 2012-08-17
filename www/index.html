@@ -17,14 +17,68 @@
 <div id="main">
 
     <div id="sidebar">
-        <ul>
+        <div id="commands">
+            <div id="echo_get">echo post</div>
+            <div id="echo_post">echo get</div>
 
-            <li><div id="hello_test">hello</div></li>
-            <li><div id="user_add_test">user_add</div></li>
-        </ul>
-        <div id="do_request">RUN!</div>
+            <div id="user_update">user_update</div>
+            <div id="user_info_meta">user_info_meta</div>
+            <div id="user_info_all">user_info_all</div>
+            <div id="user_info_relation">user_info_relation</div>
+            <div id="user_set_like_videos">user_set_like_videos</div>
+            <div id="get_hotest_list">get_hotest_list</div>
+            <div id="get_user_list">get_user_list</div>
+            <div id="get_video_comments">get_video_comments</div>
+            <div id="query_videos">query_videos</div>
+        </div>
+
+        <div id="do_request">
+            <div id="get_request">GET!</div>
+            <div id="post_request">POST!</div>
+        </div>
+
     </div>
     <div id="main_panel">
+        <div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            url
+                        </td>
+                        <td>
+                            <input type="text" id="run_url" value='http://127.0.0.1/starfish'></input>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            get内容
+                        </td>
+                        <td>
+                            <textarea id="get_param"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            post内容
+                        </td>
+                        <td>
+                            <textarea id="post_param"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            返回结果
+                        </td>
+                        <td>
+                            <textarea id="result"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div id='description'>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -32,14 +86,22 @@
     $(document).ready(function() {
         $.starfish = {};
         $.starfishd_url = "/starfish";
-        $("#sidebar div").button().bind('click', function(){
+        $("#commands div").button().bind('click', function(){
             alert('not implement now!');
         });
-        $("#hello_test").button().unbind().bind('click', function(){
-            $('#main_panel').load('html/hello.html', function(){
-                $('#do_request').button().unbind().bind('click', hello_test);
-            });
-        });
+        $("#get_request").button().bind('click', function(){
+                    var html = get_request($('#run_url').val(),
+                                $('#get_param').val());
+                    $('#result').load(html);
+                }
+        ).height('100px');
+        $("#post_request").button().bind('click', function(){
+                    var html = post_request($('#run_url').val(),
+                            $('#get_param').val(),
+                            $('#post_param').val());
+                    $('#result').load(html);
+                }
+            ).height('100px');
     });
 
 </script>
