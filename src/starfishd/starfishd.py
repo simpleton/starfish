@@ -2,6 +2,7 @@ __author__ = 'xbfool'
 
 import web
 import redis
+from hello import hello
 urls = (
     '/hello', 'hello',
     '/user/add/info', 'user_add',
@@ -12,16 +13,11 @@ urls = (
 #    '/user/set/likevideos', 'user_set_like_videos'
     )
 app = web.application(urls, globals())
+db  = redis.Redis(host='127.0.0.1',port=6379,db=1)
 
-class hello:
-    def GET(self):
-        user_data = web.input()
-        print user_data
-        return 'Hello ! %s' % user_data.get('name')
 
 class user_add:
     def POST(self):
-
         pass
 
 class user_update:
@@ -44,6 +40,24 @@ class user_set_like_videos:
     def POST(self):
         pass
 
+class get_hotest_list:
+    def GET(self,start,end):
+        pass
+
+class get_user_list:
+    def GET(self,UID,start,end):
+        pass
+
+class get_video_comments:
+    def GET(self,start,end):
+        pass
+
+class query_videos:
+    def GET(self, condition, start, end):
+        pass
+
+
+    
 application = app.wsgifunc()
 if __name__ == "__main__":
     app.run()
