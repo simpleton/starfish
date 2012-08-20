@@ -5,6 +5,7 @@ __author__ = 'simsun'
 import web
 import json
 import db.db
+import traceback
 
 class echo_test:
     """ only for  test"""
@@ -20,15 +21,19 @@ class echo_test:
 class user_add:
     """add new user"""
     def POST(self):
-        data = json.loads(web.data())
-        if (not db.db.check_user_exist(data['id'])):
-            try:
-                db.db.new_user(data['id'],data['nick'],data['head_image'])
-            except:
-                return "paramter Error"
-        else:
-            return "user already existed"
-        return " user_add %s " % db.db.get_user_base_info(data['id'])
+        try:
+            data = json.loads(web.data())
+            print data
+            if (not db.db.check_user_exist_by_name(data['username'])):
+                print "add user"
+                db.db.new_user(data['username'],data['head_image'])
+            else:
+                print "user already existed"
+                return "user already existed"
+        except Exception as e:
+            print traceback.print_exc()
+            return e
+        return " user_add %s " % db.db.get_user_base_info(data['username'])
 
 class user:
     """query user data"""
@@ -36,6 +41,3 @@ class user:
         tmp = db.db.get_user_base_info(UID)
         print tmp
         return tmp
-
-
-    
