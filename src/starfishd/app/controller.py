@@ -20,14 +20,15 @@ class echo_test:
 class user_add:
     """add new user"""
     def POST(self):
-        param = web.input()
-        try:
-            db.db.new_user(param['id'],param['nick'],param['head_image'])
-        except:
-            #TODO:
-            pass
-        
-        return " GUID = %s " % (json.dumps(param))
+        data = json.loads(web.data())
+        if (not db.db.check_user_exist(data['id'])):
+            try:
+                db.db.new_user(data['id'],data['nick'],data['head_image'])
+            except:
+                return "paramter Error"
+        else:
+            return "user already existed"
+        return " user_add %s " % db.db.get_user_base_info(data['id'])
 
 class user:
     """query user data"""
