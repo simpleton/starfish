@@ -3,9 +3,12 @@ __author__ = 'xbfool'
 import web
 import redis
 import json
-#from hello import hello
+import app.controller
+
 urls = (
-    '/echo', 'echo_test',
+    '/echo',        'app.controller.echo_test',
+    '/user/(\d+)',  'app.controller.user',
+    '/user/add',    'app.controller.user_add'
 #    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',
@@ -14,23 +17,7 @@ urls = (
 #    '/user/set/likevideos', 'user_set_like_videos'
     )
 app = web.application(urls, globals())
-db  = redis.Redis(host='127.0.0.1',port=6379,db=1)
 
-class echo_test:
-    #only used for test
-    def POST(self):
-        d = web.input()
-        print 'haha'
-        return 'haha'
-
-
-    def GET(self):
-        d = web.input()
-        return "%s" % json.dumps(d)
-
-class user_add:
-    def POST(self):
-        pass
 
 class user_update:
     def POST(self):
