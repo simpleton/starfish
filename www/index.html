@@ -18,8 +18,8 @@
 
     <div id="sidebar">
         <div id="commands">
-            <div id="echo_get">echo post</div>
-            <div id="echo_post">echo get</div>
+            <div id="echo_get">echo get</div>
+            <div id="echo_post">echo post</div>
 
             <div id="user_update">user_update</div>
             <div id="user_info_meta">user_info_meta</div>
@@ -47,7 +47,7 @@
                             url
                         </td>
                         <td>
-                            <input type="text" id="run_url" value='http://127.0.0.1/starfish'></input>
+                            <input type="text" id="run_url" value='http://127.0.0.1/starfish'/>
                         </td>
                     </tr>
                     <tr>
@@ -64,6 +64,14 @@
                         </td>
                         <td>
                             <textarea id="post_param"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            服务器状态
+                        </td>
+                        <td>
+                            <textarea id="server_result"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -86,8 +94,11 @@
     $(document).ready(function() {
         $.starfish = {};
         $.starfishd_url = "/starfish";
+        init_command_dict($.starfish);
         $("#commands div").button().bind('click', function(){
-            alert('not implement now!');
+            $('#run_url').val($.starfishd_url+$.starfish.command_dict[this.id].url);
+            $('#get_param').val($.starfish.command_dict[this.id].get_param);
+            $('#post_param').val($.starfish.command_dict[this.id].post_param);
         });
         $("#get_request").button().bind('click', function(){
                     var html = get_request($('#run_url').val(),
