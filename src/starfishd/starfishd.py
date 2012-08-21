@@ -8,7 +8,11 @@ import app.controller
 urls = (
     '/echo',        'app.controller.echo_test',
     '/user/(\d+)',  'app.controller.user',
-    '/user/add',    'app.controller.user_add'
+    '/user/add',    'app.controller.user_add',
+    '/user/friends/add', 'app.controller.friend_add'
+    
+    '/video/(\d+)', 'app.controller.video',
+    '/video/add',   'app.controller.video_add'
 #    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',
