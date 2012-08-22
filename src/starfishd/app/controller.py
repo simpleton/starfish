@@ -89,7 +89,3 @@ class friend_add:
             return e
         return " user_add %s " % db.db.get_user_base_info(data['username'])
         
-
-class video:
-    def GET(self, )
-        
