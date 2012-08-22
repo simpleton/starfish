@@ -6,6 +6,7 @@ import web
 import json
 import db.db
 import traceback
+import hashlib
 
 class echo_test:
     """ only for  test"""
@@ -53,12 +54,20 @@ class video_add:
     """add new video"""
     def POST(self):
         try:
+            sha1 = hashlib.sha1()
             video = web.input(myvideo={})
             data = json.loads(web.data())
             filedir = '/tmp/'
-            filename = data['VIDEO_SHA1']
-            with open(filedir.join(filename), 'wb') as saved:
-                saved.write(video.myvideo.file.read())
+            filepath = filedir.join(data['VIDEO_SHA1'])
+            owner = data['owner']
+            with open(filepath, 'wb') as saved:
+                sha1.update(video.myvideo.file.read())
+                if (sha1.hexdigest() == data['VIDEO_SHA1']):
+                    db.db.new_video(owner, filepath, data['VIDEO_SHA1'])
+                    saved.write(video.myvideo.file.read())
+                else:
+                    print "upload error"
+                    return 'upload error'
         except Exception as e:
             print traceback.print_exc()
             return e
@@ -79,4 +88,8 @@ class friend_add:
             print traceback.print_exc()
             return e
         return " user_add %s " % db.db.get_user_base_info(data['username'])
+        
+
+class video:
+    def GET(self, )
         
