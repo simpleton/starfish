@@ -28,3 +28,6 @@ pip-log.txt
 #editor tmp file
 \#*#
 *~
+.DS_Store
+.rdb
+.idea/
