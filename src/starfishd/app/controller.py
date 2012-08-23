@@ -46,6 +46,7 @@ class user:
 class video:
     """query video info"""
     def GET(self, VID):
+        print 'video'
         tmp = db.db.get_video_base_info(VID)
         print tmp
         return tmp
@@ -54,17 +55,18 @@ class video_add:
     """add new video"""
     def POST(self):
         try:
+            print 'add new video'
             sha1 = hashlib.sha1()
-            video = web.input(myvideo={})
-            data = json.loads(web.data())
+            video = web.input(upfile={})
+            data = web.data()
             filedir = '/tmp/'
             filepath = filedir.join(data['VIDEO_SHA1'])
             owner = data['owner']
             with open(filepath, 'wb') as saved:
-                sha1.update(video.myvideo.file.read())
+                sha1.update(video.upfile.file.read())
                 if (sha1.hexdigest() == data['VIDEO_SHA1']):
                     db.db.new_video(owner, filepath, data['VIDEO_SHA1'])
-                    saved.write(video.myvideo.file.read())
+                    saved.write(video.upfile.file.read())
                 else:
                     print "upload error"
                     return 'upload error'
@@ -72,6 +74,15 @@ class video_add:
             print traceback.print_exc()
             return e
 
+class file_upload:
+    def POST(self):
+        print 'upload file'
+        upfile = web.input(upfile={})
+        filepath = 'hello'
+        with open(filepath, 'wb') as saved:
+            saved.write(upfile.upfile.file.read())
+            
+        
 class friend_add:
     def POST(self):
         try:
@@ -88,4 +99,7 @@ class friend_add:
             print traceback.print_exc()
             return e
         return " user_add %s " % db.db.get_user_base_info(data['username'])
+        
+
+
         
