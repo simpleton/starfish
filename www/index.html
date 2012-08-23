@@ -50,17 +50,18 @@
                             <input type="text" id="run_url" value='http://127.0.0.1/starfish'/>
                         </td>
                     </tr>
+                    <form id="fileupload_form" method='POST' enctype='multipart/form-data' action='/starfish/fileupload'>
                     <tr>
                         <td>
                             文件上传
                         </td>
                         <td>
-                            <form method='POST' enctype='multipart/form-data' action='/starfish/fileupload'>
+
                                 File to upload: <input type=file name=upfile><br>
                                 Notes about the file: <input type=text name=note><br>
                                 <br>
-                                <input type=submit value=Press> to upload the file!
-                            </form>
+                                <input type=submit value=Press id="submit"> to upload the file!
+
 
                         </td>
                     </tr>
@@ -69,7 +70,7 @@
                             get内容
                         </td>
                         <td>
-                            <textarea id="get_param"></textarea>
+                            <textarea id="get_param" name="json_get"></textarea>
                         </td>
                     </tr>
                     <tr>
@@ -77,9 +78,10 @@
                             post内容
                         </td>
                         <td>
-                            <textarea id="post_param"></textarea>
+                            <textarea id="post_param" name="json_post"></textarea>
                         </td>
                     </tr>
+                    </form>
                     <tr>
                         <td>
                             服务器状态
@@ -127,6 +129,7 @@
                     $('#result').load(html);
                 }
             ).height('100px');
+
     });
 
 </script>
