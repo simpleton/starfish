@@ -100,6 +100,12 @@ class friend_add:
             return e
         return " user_add %s " % db.db.get_user_base_info(data['username'])
         
-
+class video_list:
+    def GET(self, username):
+        print username
+        return db.db.get_video_list_byusername(username)
+    
+    def POST(self, username):
+        return db.db.get_video_list_byusername(username)
 
         

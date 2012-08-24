@@ -12,7 +12,9 @@ urls = (
     '/user/friends/add', 'app.controller.friend_add',    
     '/video/(\d+)', 'app.controller.video',
     '/video/add',   'app.controller.video_add',
-    '/fileupload',  'app.controller.file_upload'
+    '/fileupload',  'app.controller.file_upload',
+    '/video/list/username/(.*)', 'app.controller.video_list'
+    
 #    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',
