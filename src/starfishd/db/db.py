@@ -32,27 +32,36 @@ def check_user_exist_by_name(username):
 def _print_all_user():
     print redis_client.keys()
 
-def new_video(owner, filepath, sha1):
+def _new_video(owner, filepath, sha1):
     if (not redis_client.exists(':'.join([VIDEO_SHA1, sha1, VID]))):
         vid = str(redis_client.incr(GLOBAL_VIDEOID_FLAG))
         db_video._init_empty_video_info(vid)
         redis_client.set(':'.join([VIDEO_SHA1, sha1, VID]), vid)
 
-
-        now = datetime.now()
-        print now
-        info = {VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now}
+        now  = datetime.now()
+        info = {VID:vid, VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now}
         redis_client.hmset(':'.join([VID, vid, HASH]), info)
 
         uid = db_user._get_user_id(owner)
         redis_client.lpush(':'.join([UID, uid, VIDEO_LIST]), vid)
-        return True
+        return vid
     else:
         #already in database
-        return False
-        
+        return -1
+    
+def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1'):
+    vid = _new_video(owner, filepath, sha1)
+    if (vid > 0):
+        db_video._set_video_spot(vid, spot)
+        db_video._set_video_title(vid, title)
+        db_video._set_video_popular(vid, is_hot)
+        db_video._set_video_public(vid, is_public)
+        return vid
+    else :
+        return -1    
+    
 def add_follow(selfname, friendname):
-    selfid = db_user._get_user_id(selfname)
+    selfid   = db_user._get_user_id(selfname)
     friendid = db_user._get_user_id(friendname)
     _add_follow(selfid, friendid)
     
@@ -60,9 +69,18 @@ def _add_follow(selfid, friendid):
     db_user._add_following(selfid, friendid)
     db_user._add_follower(friendid, selfid)
 
-def like_video(username, vidoeid):
-    pass
+def like_video(username, videoid):
+    uid = db_user._get_user_id(username)
+    db_user._add_like_video(uid, videoid)
+    db_video._add_liked_user(videoid, uid)
 
+def get_like_video_list(username):
+    uid = db_user._get_user_id(username)
+    return db_user._get_like_video_list(uid)
+
+def get_liked_user_list(vid):
+    return db_video._get_liked_user_list(vid)
+    
 def add_comment(username, videoid, comment):
     pass
 
@@ -75,24 +93,21 @@ def get_user_following_list(username):
     return db_user._get_user_following_list(uid)
     
 def get_video_base_info(vid):
-    baseinfo = redis_client.hgetall(':'.join([VID, vid, HASH]))
-    
-    print 'get_video_base_info', baseinfo['owner']
+    baseinfo          = redis_client.hgetall(':'.join([VID, vid, HASH]))
     baseinfo['owner'] = get_user_base_info(baseinfo['owner'])
-    print 'get_video', baseinfo['owner']
-    return json.dumps(baseinfo)
+    return baseinfo
 
 def get_video_list_byuserid(uid):
     video_list = redis_client.lrange(':'.join([UID, uid, VIDEO_LIST]),0 ,-1)
     return video_list
 
 def get_video_list_byusername(username):
-    uid = db_user._get_user_id(username)
-    vid_list = get_video_list_byuserid(uid)
-    video_list = []
+    uid                 = db_user._get_user_id(username)
+    vid_list            = get_video_list_byuserid(uid)
+    video_list          = []
     for i in vid_list:
         video_list.append(get_video_base_info(i))
-    mdict = {}
+    mdict               = {}
     mdict['error_code'] = '0'
     mdict['video_list'] = video_list
     mdict['total_size'] = len(vid_list)

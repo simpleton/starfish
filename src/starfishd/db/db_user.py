@@ -33,3 +33,10 @@ def _add_following(selfid, followingid):
 def _get_user_likes(uid):
     #TODO:
     pass
+
+def _add_like_video(uid, vid):
+    redis_client.sadd(':'.join([UID, uid, LIKE_VIDEO_LIST]), vid)
+    
+def _get_like_video_list(uid):
+    return redis_client.smembers(':'.join([UID, uid, LIKE_VIDEO_LIST]))
+    
