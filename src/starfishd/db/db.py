@@ -1,10 +1,12 @@
+#! /usr/bin/python
+# -*- coding: utf-8 -*-
 import json
 import web
 import redis
 import db_video
 import db_user
 from db_conf import *
-
+from datetime import datetime
 
 def new_user(username, head_image):
     if (redis_client.exists(':'.join([USERNAME,username,UID]))):
@@ -15,12 +17,14 @@ def new_user(username, head_image):
         print ':'.join([USERNAME,username,UID])
     
         redis_client.set(':'.join([USERNAME, username,  UID]), userid)
-        userinfo = {USERNAME:username, HEADIMAGE:head_image, FOLLOWER_LIST:':'.join([UID, userid, FOLLOWER_LIST]), FOLLOWING_LIST:':'.join([UID, userid, FOLLOWING_LIST])}
+        userinfo = {USERNAME:username, HEADIMAGE:head_image, UID:userid}
         redis_client.hmset(':'.join([UID, userid, HASH]), userinfo)
         return True
 
 def get_user_base_info(username):
-    return redis_client.get(':'.join([USERNAME, username,  UID]))
+    #redis_client.get(':'.join([USERNAME, username,  UID]))
+    uid = db_user._get_user_id(username)
+    return db_user._get_user_base_info(uid)
 
 def check_user_exist_by_name(username):
     return redis_client.exists(':'.join([USERNAME,  username, UID]))
@@ -33,8 +37,11 @@ def new_video(owner, filepath, sha1):
         vid = str(redis_client.incr(GLOBAL_VIDEOID_FLAG))
         db_video._init_empty_video_info(vid)
         redis_client.set(':'.join([VIDEO_SHA1, sha1, VID]), vid)
-        
-        info = {VIDEO_SHA1:sha1, OWNER:owner, FILEPATH:filepath}
+
+
+        now = datetime.now()
+        print now
+        info = {VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now}
         redis_client.hmset(':'.join([VID, vid, HASH]), info)
 
         uid = db_user._get_user_id(owner)
@@ -53,7 +60,6 @@ def _add_follow(selfid, friendid):
     db_user._add_following(selfid, friendid)
     db_user._add_follower(friendid, selfid)
 
-
 def like_video(username, vidoeid):
     pass
 
@@ -70,6 +76,10 @@ def get_user_following_list(username):
     
 def get_video_base_info(vid):
     baseinfo = redis_client.hgetall(':'.join([VID, vid, HASH]))
+    
+    print 'get_video_base_info', baseinfo['owner']
+    baseinfo['owner'] = get_user_base_info(baseinfo['owner'])
+    print 'get_video', baseinfo['owner']
     return json.dumps(baseinfo)
 
 def get_video_list_byuserid(uid):
@@ -83,9 +93,8 @@ def get_video_list_byusername(username):
     for i in vid_list:
         video_list.append(get_video_base_info(i))
     mdict = {}
-    #TODO:
-    mdict['error_code'] = 'success'
-    mdict['VIDEO_LIST'] = video_list
+    mdict['error_code'] = '0'
+    mdict['video_list'] = video_list
     mdict['total_size'] = len(vid_list)
     return json.dumps(mdict)
     

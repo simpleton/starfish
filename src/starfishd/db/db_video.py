@@ -1,7 +1,9 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 from db_conf import *
 
 def _init_empty_video_info(vid):
-    item = {SPOT:'', POPULAR:'', TITLE:'', PUBLIC:'', URL:'', VIDEO_SHA1:'', OWNER:'', VID:''}
+    item = {SPOT:'null', POPULAR:'null', TITLE:'null', PUBLIC:'null', URL:'null', VIDEO_SHA1:'null', OWNER:'null', VID:'null'}
     redis_client.hmset(':'.join([VID, vid, HASH]), item)
     
     

@@ -1,3 +1,5 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 from db_conf import *
 
 def _get_user_id(username):
@@ -8,6 +10,9 @@ def _get_user_name(uid):
 
 def _get_user_headimage(uid):
     return redis_client.hget(':'.join([UID, uid, HASH]), HEADIMAGE)
+
+def _get_user_base_info(uid):
+    return redis_client.hgetall(':'.join([UID, uid, HASH]))
 
 def _get_user_follower_list(uid):
     follower_list = redis_client.hget(':'.join([UID, uid, HASH]), FOLLOWER_LIST)
