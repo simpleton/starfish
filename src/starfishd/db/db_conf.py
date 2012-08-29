@@ -21,5 +21,7 @@ HASH = 'hash'
 URL = 'url'
 
 VIDEO_LIST = 'video_list'
+FOLLOWING_LIST = 'following_list'
+FOLLOWER_LIST = 'follower_list'
 
 redis_client = redis.Redis(host='127.0.0.1',port=6379, db=1)

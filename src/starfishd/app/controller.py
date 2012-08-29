@@ -75,12 +75,14 @@ class video_add:
             return e
 
 class file_upload:
+    def GET(self):
+        return 'file_upload'
     def POST(self):
         print 'upload file'
-        upfile = web.input(upfile={})
+        upfile = web.input(uploaded_file={})
         filepath = 'hello'
         with open(filepath, 'wb') as saved:
-            saved.write(upfile.upfile.file.read())
+            saved.write(upfile.uploaded_file.file.read())
             
         
 class friend_add:

@@ -13,8 +13,9 @@ def new_user(username, head_image):
     else :
         userid = str(redis_client.incr(GLOBAL_USERID_FLAG))
         print ':'.join([USERNAME,username,UID])
+    
         redis_client.set(':'.join([USERNAME, username,  UID]), userid)
-        userinfo = {USERNAME:username, HEADIMAGE:head_image}
+        userinfo = {USERNAME:username, HEADIMAGE:head_image, FOLLOWER_LIST:':'.join([UID, userid, FOLLOWER_LIST]), FOLLOWING_LIST:':'.join([UID, userid, FOLLOWING_LIST])}
         redis_client.hmset(':'.join([UID, userid, HASH]), userinfo)
         return True
 
@@ -43,7 +44,30 @@ def new_video(owner, filepath, sha1):
         #already in database
         return False
         
+def add_follow(selfname, friendname):
+    selfid = db_user._get_user_id(selfname)
+    friendid = db_user._get_user_id(friendname)
+    _add_follow(selfid, friendid)
+    
+def _add_follow(selfid, friendid):
+    db_user._add_following(selfid, friendid)
+    db_user._add_follower(friendid, selfid)
 
+
+def like_video(username, vidoeid):
+    pass
+
+def add_comment(username, videoid, comment):
+    pass
+
+def get_user_follower_list(username):
+    uid = db_user._get_user_id(username)
+    return db_user._get_user_follower_list(uid)
+
+def get_user_following_list(username):
+    uid = db_user._get_user_id(username)
+    return db_user._get_user_following_list(uid)
+    
 def get_video_base_info(vid):
     baseinfo = redis_client.hgetall(':'.join([VID, vid, HASH]))
     return json.dumps(baseinfo)
