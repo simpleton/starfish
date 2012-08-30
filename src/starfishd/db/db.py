@@ -86,12 +86,25 @@ def add_comment(username, videoid, comment):
 
 def get_user_follower_list(username):
     uid = db_user._get_user_id(username)
-    return db_user._get_user_follower_list(uid)
+    mlist = db_user._get_user_follower_list(uid)
+    return json.dumps(_get_json_user_list(mlist))
 
 def get_user_following_list(username):
     uid = db_user._get_user_id(username)
-    return db_user._get_user_following_list(uid)
+    mlist = db_user._get_user_following_list(uid)
+    return json.dumps(_get_json_user_list(mlist))
     
+def _get_json_user_list(uidlist):
+    mdict = {}
+    user_list = []
+    for uid in uidlist:
+        user_list.append(db_user._get_user_base_info(uid))
+    print user_list
+    mdict['error_code'] = '0'
+    mdict['people'] = user_list
+    mdict['total_size'] = len(uidlist)
+    return mdict
+
 def get_video_base_info(vid):
     baseinfo          = redis_client.hgetall(':'.join([VID, vid, HASH]))
     baseinfo['owner'] = get_user_base_info(baseinfo['owner'])
@@ -112,6 +125,10 @@ def get_video_list_byusername(username):
     mdict['video_list'] = video_list
     mdict['total_size'] = len(vid_list)
     return json.dumps(mdict)
+
+#def get_all_video(username):
+    
+    
     
 def _clear_all():
     for elem in redis_client.keys():

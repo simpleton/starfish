@@ -105,10 +105,30 @@ class friend_add:
         
 class video_list:
     def GET(self, username):
-        print username
-        return db.db.get_video_list_byusername(username)
+        if (db.db.check_user_exist_by_name(username)):
+            return db.db.get_video_list_byusername(username)
+        else:
+            return 'no such person'
     
     def POST(self, username):
         return db.db.get_video_list_byusername(username)
 
-        
+class user_following:
+    def GET(self, username):
+        if (db.db.check_user_exist_by_name(username)):
+            return db.db.get_user_following_list(username)
+        else :
+            #TODO:
+            return 'no such person'
+    
+class user_follower:
+    def GET(self, username):
+        if (db.db.check_user_exist_by_name(username)):
+            return db.db.get_user_follower_list(username)
+        else:
+            return 'no such person'
+    
+class user_likevideo:
+    def GET(self, username):
+        print 'user_likevideo', username
+        return db.db.get_like_video_list(username)

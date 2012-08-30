@@ -16,8 +16,10 @@ urls = (
     '/video/(\d+)', 'app.controller.video',
     '/video/add',   'app.controller.video_add',
     '/fileupload',  'app.controller.file_upload',
-    '/video/list/username/(.*)', 'app.controller.video_list'
-    
+    '/video/list/username/(.*)', 'app.controller.video_list',
+    '/user/following/(.*)', 'app.controller.user_following',
+    '/user/follower/(.*)', 'app.controller.user_follower',
+    '/user/video/like/(.*)', 'app.controller.user_likevideo'
 #    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',
