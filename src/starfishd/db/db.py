@@ -8,6 +8,13 @@ import db_user
 from db_conf import *
 from datetime import datetime
 
+
+def check_user_exist_by_name(username):
+    return db_user._check_user_exist_by_name(username)
+
+def check_video_exist_by_id(vid):
+    return db_video._check_video_existed(vid)
+
 def new_user(username, head_image):
     if (redis_client.exists(':'.join([USERNAME,username,UID]))):
         #already in database
@@ -55,7 +62,7 @@ def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1'):
         db_video._set_video_public(vid, is_public)
         return vid
     else :
-        return -1    
+        return server_error(2, 'video error')
     
 def add_follow(selfname, friendname):
     selfid   = db_user._get_user_id(selfname)
@@ -76,8 +83,8 @@ def get_videoliked_user_list(vid):
         userlist = db_video._get_liked_user_list(vid)
         return json.dumps(_get_json_user_list(userlist))
     else:
-        #TODO:
-        return 'error'
+        return server_error(1,"no such user").dumps()
+
     
 def get_user_like_video_list(username):
     if (db_user._check_user_exist_by_name(username)):
@@ -85,8 +92,8 @@ def get_user_like_video_list(username):
         vidlist = db_user._get_like_video_list(uid)
         return json.dumps(_get_json_video_list(vidlist))
     else :
-        #TODO:
-        return 'error'
+        return server_error(1,"no such user").dumps()
+       
 
 def add_comment(username, videoid, comment):
     pass

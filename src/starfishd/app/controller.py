@@ -130,10 +130,14 @@ class user_follower:
     
 class user_likevideos:
     def GET(self, username):
-
-        return db.db.get_user_like_video_list(username)
+        if (db.db.check_user_exist_by_name(username)):
+            return db.db.get_user_like_video_list(username)
+        else:
+            return 'no'
 
 class video_likeby_users:
     def GET(self, vid):
-
-        return db.db.get_videoliked_user_list(vid)
+        if (db.db.check_video_exist_by_id(vid)):
+            return db.db.get_videoliked_user_list(vid)
+        else:
+            return 'no'
