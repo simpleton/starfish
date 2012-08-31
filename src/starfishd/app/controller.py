@@ -128,7 +128,12 @@ class user_follower:
         else:
             return 'no such person'
     
-class user_likevideo:
+class user_likevideos:
     def GET(self, username):
-        print 'user_likevideo', username
-        return db.db.get_like_video_list(username)
+
+        return db.db.get_user_like_video_list(username)
+
+class video_likeby_users:
+    def GET(self, vid):
+
+        return db.db.get_videoliked_user_list(vid)

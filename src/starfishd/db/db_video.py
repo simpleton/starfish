@@ -6,21 +6,26 @@ def _init_empty_video_info(vid):
     item = {SPOT:'null', POPULAR:'0', TITLE:'null', PUBLIC:'1', URL:'null', VIDEO_SHA1:'null', OWNER:'null', VID:'null'}
     redis_client.hmset(':'.join([VID, vid, HASH]), item)
     
+def _check_video_existed(vid):
+    if (redis_client.exists(':'.join([VID, vid, HASH]))):
+        return True    
+    else:
+        return False
     
 def _set_video_title(vid, title):
-    if (redis_client.exists(':'.join([VID, vid , HASH]))):
+    if (_check_video_existed(vid)):
         redis_client.hset(':'.join([VID, vid, HASH]), TITLE, title)
 
 def _set_video_spot(vid, vspot):
-    if (redis_client.exists(':'.join([VID, vid, HASH]))):
+    if (_check_video_existed(vid)):
         redis_client.hset(':'.join([VID, vid, HASH]), SPOT, vspot)
 
 def _set_video_popular(vid , popular):
-    if (redis_client.exists(':'.join([VID, vid , HASH]))):
+    if (_check_video_existed(vid)):
         redis_client.hset(':'.join([VID, vid, HASH]), POPULAR, popular)
 
 def _set_video_public(vid , authority):
-    if (redis_client.exists(':'.join([VID, vid , HASH]))):
+    if (_check_video_existed(vid)):
         #TODO: user check
         redis_client.hset(':'.join([VID, vid, HASH]), PUBLIC, authority)
 
@@ -55,7 +60,7 @@ def _del_video(vid):
     redis_client.delete(':'.join([VIDEO_SHA1, sha1, VID]))
 
 def _add_liked_user(vid, uid):
-    redis_client.sadd(':'.join([VID, vid, LIKED_USER_LIST]), vid)
+    redis_client.sadd(':'.join([VID, vid, LIKED_VIDEO_USER_LIST]), uid)
     
 def _get_liked_user_list(vid):
-    return redis_client.smembers(':'.join([VID, vid, LIKED_USER_LIST]))
+    return redis_client.smembers(':'.join([VID, vid, LIKED_VIDEO_USER_LIST]))

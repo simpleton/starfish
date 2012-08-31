@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 from db_conf import *
 
+def _check_user_exist_by_name(username):
+    return redis_client.exists(':'.join([USERNAME, username, UID]))
+
 def _get_user_id(username):
     return redis_client.get(':'.join([USERNAME, username,  UID]))
 

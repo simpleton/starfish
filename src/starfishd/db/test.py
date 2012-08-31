@@ -20,11 +20,27 @@ class video_singal_query_testcase(unittest.TestCase):
         db._new_video('juncheng', 'video_juncheng', self.SHA1+'E')
         db.add_follow('simsun', 'tyler')
         db.add_follow('simsun', 'juncheng')
-        
+        db.like_video('simsun', '1')
+        db.like_video('simsun', '2')
+        db.like_video('tyler', '1')
+        db.like_video('juncheng', '1')
+
 
     def tearDown(self):
         vid = db_video._get_video_id(self.SHA1)
         #db_video._del_video(vid)
+        
+    def test_like_video_userlist(self):
+        userlist = db.get_videoliked_user_list('2')
+        print 'test_like_video', userlist
+        userlist = db.get_videoliked_user_list('1')
+        print userlist
+        
+    def test_user_liked_videolist(self):
+        videolist = db.get_user_like_video_list('simsun')
+        print videolist
+        videolist = db.get_user_like_video_list('tyler')
+        print videolist
         
     def test_new_video(self):
         SHA1   = self.SHA1

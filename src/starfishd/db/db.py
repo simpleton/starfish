@@ -26,9 +26,6 @@ def get_user_base_info(username):
     uid = db_user._get_user_id(username)
     return db_user._get_user_base_info(uid)
 
-def check_user_exist_by_name(username):
-    return redis_client.exists(':'.join([USERNAME,  username, UID]))
-
 def _print_all_user():
     print redis_client.keys()
 
@@ -74,13 +71,23 @@ def like_video(username, videoid):
     db_user._add_like_video(uid, videoid)
     db_video._add_liked_user(videoid, uid)
 
-def get_like_video_list(username):
-    uid = db_user._get_user_id(username)
-    return db_user._get_like_video_list(uid)
-
-def get_liked_user_list(vid):
-    return db_video._get_liked_user_list(vid)
+def get_videoliked_user_list(vid):
+    if (db_video._check_video_existed(vid)):
+        userlist = db_video._get_liked_user_list(vid)
+        return json.dumps(_get_json_user_list(userlist))
+    else:
+        #TODO:
+        return 'error'
     
+def get_user_like_video_list(username):
+    if (db_user._check_user_exist_by_name(username)):
+        uid     = db_user._get_user_id(username)
+        vidlist = db_user._get_like_video_list(uid)
+        return json.dumps(_get_json_video_list(vidlist))
+    else :
+        #TODO:
+        return 'error'
+
 def add_comment(username, videoid, comment):
     pass
 
@@ -117,17 +124,20 @@ def get_video_list_byuserid(uid):
 def get_video_list_byusername(username):
     uid                 = db_user._get_user_id(username)
     vid_list            = get_video_list_byuserid(uid)
-    video_list          = []
-    for i in vid_list:
-        video_list.append(get_video_base_info(i))
-    mdict               = {}
+    return _get_json_video_list(vid_list)
+
+def _get_json_video_list(vidlist):
+    video_list = []
+    for vid in vidlist:
+        video_list.append(get_video_base_info(vid))
+    mdict = {}
     mdict['error_code'] = '0'
     mdict['video_list'] = video_list
-    mdict['total_size'] = len(vid_list)
-    return json.dumps(mdict)
-
-#def get_all_video(username):
+    mdict['total_size'] = len(vidlist)
+    return mdict
     
+#def get_all_video(username):
+        
     
     
 def _clear_all():
