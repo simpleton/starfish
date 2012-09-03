@@ -147,3 +147,7 @@ class video_likeby_users:
     def GET(self, vid):
         return db.db.get_videoliked_user_list(vid)
       
+class video_comment:
+    @check_video_exist_byid
+    def GET(self, vid):
+        return db.db.get_comment(vid)

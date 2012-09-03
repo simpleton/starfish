@@ -20,7 +20,8 @@ urls = (
     '/user/following/(.*)', 'app.controller.user_following',
     '/user/follower/(.*)', 'app.controller.user_follower',
     '/user/video/like/(.*)', 'app.controller.user_likevideos',
-    '/video/user/like/(.*)', 'app.controller.video_likeby_users'
+    '/video/user/like/(.*)', 'app.controller.video_likeby_users',
+    '/video/comment/(.*)', 'app.controller.video_comment'
 #    '/user/add/info', 'user_add',
 #    '/user/set/info', 'user_update',
 #    '/user/info/meta', 'user_info_meta',

@@ -5,8 +5,20 @@ import web
 import redis
 import db_video
 import db_user
+import gettime
 from db_conf import *
-from datetime import datetime
+
+
+#decorator
+def check_user_and_vid(func):
+    def check(username, videoid, *args):
+        if (not check_user_exist_by_name(username)):
+            return errorno.server_error(errorno.USER_NOT_EXISTED[0], errorno.USER_NOT_EXISTED[1]).dumps()
+        elif (not check_video_exist_by_id(videoid)):
+            return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], errorno.VIDEO_NOT_EXISTED[1]).dumps()
+        else:
+            func(username, videoid, *args)
+    return check
 
 
 def check_user_exist_by_name(username):
@@ -44,8 +56,8 @@ def _new_video(owner, filepath, sha1):
         db_video._init_empty_video_info(vid)
         redis_client.set(':'.join([VIDEO_SHA1, sha1, VID]), vid)
 
-        now  = datetime.now()
-        info = {VID:vid, VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now}
+        now  = gettime.gettime()      
+        info = {VID:vid, VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now.get()}
         redis_client.hmset(':'.join([VID, vid, HASH]), info)
 
         uid = db_user._get_user_id(owner)
@@ -92,9 +104,18 @@ def get_user_like_video_list(username):
     vidlist = db_user._get_like_video_list(uid)
     return json.dumps(_get_json_video_list(vidlist))
 
+@check_user_and_vid
 def add_comment(username, videoid, comment):
-    pass
-
+    return db_video._add_comment(username, videoid, comment)
+    
+def get_comment(vid):
+    commentlist = db_video._get_comment(vid)
+    mdict = {}
+    mdict['error_code'] =  '0'
+    mdict['total_size'] = len(commentlist)
+    mdict['comment'] = commentlist
+    return json.dumps(mdict)
+    
 def get_user_follower_list(username):
     uid = db_user._get_user_id(username)
     mlist = db_user._get_user_follower_list(uid)
@@ -149,5 +170,7 @@ def _clear_all():
         redis_client.delete(elem)
     
 if __name__ == '__main__':
+    now = gettime.gettime()
+    print now.get()
     _clear_all()
     _print_all_user()

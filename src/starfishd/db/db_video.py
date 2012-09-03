@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 from db_conf import *
+import gettime
+
 
 def _init_empty_video_info(vid):
     item = {SPOT:'null', POPULAR:'0', TITLE:'null', PUBLIC:'1', URL:'null', VIDEO_SHA1:'null', OWNER:'null', VID:'null'}
@@ -64,3 +66,14 @@ def _add_liked_user(vid, uid):
     
 def _get_liked_user_list(vid):
     return redis_client.smembers(':'.join([VID, vid, LIKED_VIDEO_USER_LIST]))
+
+def _add_comment(username, vid, comment):
+    now = gettime.gettime()
+    mcomment = {'reviewer':username, 'content':comment, 'posttime':now.get()}
+    redis_client.lpush(':'.join([VID, vid, COMMENT]), mcomment)
+    
+def _get_comment(vid):
+    comment_list = []
+    comment_list = redis_client.lrange(':'.join([VID, vid, COMMENT]), 0, -1)
+    return comment_list
+

@@ -81,7 +81,13 @@ class video_singal_query_testcase(unittest.TestCase):
     def test_follow_list(self):
         print 'follower list:', db.get_user_follower_list('simsun')
         print 'following list:', db.get_user_following_list('simsun')
+
+    def test_add_comment(self):
+        print db.add_comment('simsun', '1', 'great video')
+        print db.add_comment('tyler', '1', 'great!!') 
+        print db.add_comment('tyler', '1', 'great!!') 
+        print db.add_comment('tyler', '1', 'great!!') 
+        print db.get_comment('1')
         
-            
 if __name__ == '__main__':
     unittest.main()

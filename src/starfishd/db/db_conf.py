@@ -27,4 +27,6 @@ FOLLOWER_LIST = 'follower_list'
 LIKE_VIDEO_LIST = 'like_video_list'
 LIKED_VIDEO_USER_LIST = 'liked_video_user_list'
 
+COMMENT = 'comment'
+
 redis_client = redis.Redis(host='127.0.0.1',port=6379, db=1)
