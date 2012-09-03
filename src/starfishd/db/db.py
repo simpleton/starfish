@@ -62,7 +62,7 @@ def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1'):
         db_video._set_video_public(vid, is_public)
         return vid
     else :
-        return server_error(2, 'video error')
+        return -2
     
 def add_follow(selfname, friendname):
     selfid   = db_user._get_user_id(selfname)
@@ -85,15 +85,10 @@ def get_videoliked_user_list(vid):
     else:
         return server_error(1,"no such user").dumps()
 
-    
 def get_user_like_video_list(username):
-    if (db_user._check_user_exist_by_name(username)):
-        uid     = db_user._get_user_id(username)
-        vidlist = db_user._get_like_video_list(uid)
-        return json.dumps(_get_json_video_list(vidlist))
-    else :
-        return server_error(1,"no such user").dumps()
-       
+    uid     = db_user._get_user_id(username)
+    vidlist = db_user._get_like_video_list(uid)
+    return json.dumps(_get_json_video_list(vidlist))
 
 def add_comment(username, videoid, comment):
     pass

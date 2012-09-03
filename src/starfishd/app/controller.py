@@ -8,6 +8,9 @@ import json
 import db.db
 import traceback
 import hashlib
+import errorcode_builder as errorno
+from decorator import *
+
 
 class echo_test:
     """ only for  test"""
@@ -25,7 +28,6 @@ class user_add:
     def POST(self):
         try:
             data = json.loads(web.data())
-            print data
             if (not db.db.check_user_exist_by_name(data['username'])):
                 print "add user"
                 db.db.new_user(data['username'],data['head_image'])
@@ -41,22 +43,18 @@ class user:
     """query user data"""
     def GET(self, UID):
         tmp = db.db.get_user_base_info(UID)
-        print tmp
         return tmp
 
 class video:
     """query video info"""
     def GET(self, VID):
-        print 'video'
         tmp = db.db.get_video_base_info(VID)
-        print tmp
         return tmp
 
 class video_add:
     """add new video"""
     def POST(self):
         try:
-            print 'add new video'
             sha1 = hashlib.sha1()
             video = web.input(upfile={})
             data = web.data()
@@ -79,7 +77,6 @@ class file_upload:
     def GET(self):
         return 'file_upload'
     def POST(self):
-        print 'upload file'
         upfile = web.input(uploaded_file={})
         filepath = 'hello'
         with open(filepath, 'wb') as saved:
@@ -90,54 +87,41 @@ class friend_add:
     def POST(self):
         try:
             data = json.loads(web.data())
-            print data
             if (db.db.check_user_exist_by_name(data['friend_name'])):
-                print "add friend"
                 #TODO:
                 db.db.add_friend(data['username'],data['friend_name'])
             else:
-                print "user not existed"
-                return "user not existed"
+                return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], errorno.VIDEO_NOT_EXISTED[1]).dumps()
         except Exception as e:
             print traceback.print_exc()
             return e
         return " user_add %s " % db.db.get_user_base_info(data['username'])
         
 class video_list:
+    @check_user_existed_byname
     def GET(self, username):
-        if (db.db.check_user_exist_by_name(username)):
-            return db.db.get_video_list_byusername(username)
-        else:
-            return 'no such person'
+        return db.db.get_video_list_byusername(username)
     
     def POST(self, username):
         return db.db.get_video_list_byusername(username)
 
 class user_following:
+    @check_user_existed_byname
     def GET(self, username):
-        if (db.db.check_user_exist_by_name(username)):
-            return db.db.get_user_following_list(username)
-        else :
-            #TODO:
-            return 'no such person'
-    
-class user_follower:
-    def GET(self, username):
-        if (db.db.check_user_exist_by_name(username)):
-            return db.db.get_user_follower_list(username)
-        else:
-            return 'no such person'
-    
-class user_likevideos:
-    def GET(self, username):
-        if (db.db.check_user_exist_by_name(username)):
-            return db.db.get_user_like_video_list(username)
-        else:
-            return 'no'
+        return db.db.get_user_following_list(username)
 
+class user_follower:
+    @check_user_existed_byname
+    def GET(self, username):
+        return db.db.get_user_follower_list(username)
+
+class user_likevideos:
+    @check_user_existed_byname
+    def GET(self, username):
+        return db.db.get_user_like_video_list(username)
+      
 class video_likeby_users:
+    @check_video_exist_byid
     def GET(self, vid):
-        if (db.db.check_video_exist_by_id(vid)):
-            return db.db.get_videoliked_user_list(vid)
-        else:
-            return 'no'
+        return db.db.get_videoliked_user_list(vid)
+      
