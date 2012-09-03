@@ -3,6 +3,7 @@
 
 __author__ = 'simsun'
 
+import os
 import web
 import json
 import db.db
@@ -77,10 +78,31 @@ class file_upload:
     def GET(self):
         return 'file_upload'
     def POST(self):
-        upfile = web.input(uploaded_file={})
-        filepath = 'hello'
-        with open(filepath, 'wb') as saved:
-            saved.write(upfile.uploaded_file.file.read())
+        try:
+            sha1 = hashlib.sha1()
+            upfile    = web.input(uploaded_file={})
+            owner     = upfile.video_owner
+            place     = upfile.video_place
+            title     = upfile.video_title
+            authority = upfile.video_public
+            filedir = 'tmp/'
+#            print owner, sha1.hexdigest(), authority, title
+            if not os.path.exists(filedir):
+                os.mkdir(filedir)
+            sha1.update(upfile.uploaded_file.file.read())      
+            filepath = ''.join([filedir, sha1.hexdigest(), '.mp4'])
+            with open(filepath, 'wb') as saved:
+                saved.write(upfile.uploaded_file.file.read())
+                ret = db.db.new_video(owner, filepath, sha1.hexdigest(), title, place)
+                print 'add new video ', ret
+                if (ret == -1):
+                    return errorno.server_error(errorno.VIDEO_ALREADY_EXISTED[0], errorno.VIDEO_ALREADY_EXISTED[1])
+                elif (ret == -2):
+                    return 'user not existed'
+                
+        except Exception as e:
+            print traceback.print_exc()
+            
             
         
 class friend_add:

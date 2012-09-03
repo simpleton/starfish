@@ -9,7 +9,7 @@ import web
 USER_NOT_EXISTED = 101, 'user not existed'
 
 VIDEO_NOT_EXISTED = 201, 'video not existed'
-
+VIDEO_ALREADY_EXISTED = 202, 'video already existed'
 
 class server_error:
     def __init__(self, *str):

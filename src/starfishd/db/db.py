@@ -37,7 +37,9 @@ def _print_all_user():
     print redis_client.keys()
 
 def _new_video(owner, filepath, sha1):
-    if (not redis_client.exists(':'.join([VIDEO_SHA1, sha1, VID]))):
+    if (not check_user_exist_by_name(owner)):
+        return -2
+    elif (not redis_client.exists(':'.join([VIDEO_SHA1, sha1, VID]))):
         vid = str(redis_client.incr(GLOBAL_VIDEOID_FLAG))
         db_video._init_empty_video_info(vid)
         redis_client.set(':'.join([VIDEO_SHA1, sha1, VID]), vid)
@@ -62,7 +64,7 @@ def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1'):
         db_video._set_video_public(vid, is_public)
         return vid
     else :
-        return -2
+        return vid
     
 def add_follow(selfname, friendname):
     selfid   = db_user._get_user_id(selfname)
