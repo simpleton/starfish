@@ -151,3 +151,8 @@ class video_comment:
     @check_video_exist_byid
     def GET(self, vid):
         return db.db.get_comment(vid)
+
+class all_video:
+    @check_user_existed_byname
+    def GET(self, username):
+        return db.db.get_all_video(username)

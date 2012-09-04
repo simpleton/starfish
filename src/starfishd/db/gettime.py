@@ -1,8 +1,8 @@
-from datetime import datetime
+import time
 
 class gettime:
     def __init__(self):
-        self.now = datetime.now()
+        self.now = time.time()
         
     def get(self):
-        return str(self.now)
+        return str(int(self.now))

@@ -5,6 +5,7 @@ from db_conf import *
 import db
 import db_video
 import db_user
+import time
 
 class video_singal_query_testcase(unittest.TestCase):
     def setUp(self):
@@ -18,6 +19,9 @@ class video_singal_query_testcase(unittest.TestCase):
         db.new_video('simsun', 'video3', self.SHA1+'C', 'title4', 'spot5')
         db.new_video('juncheng', 'video1', self.SHA1+'D', 'title5', 'spot6')
         db._new_video('juncheng', 'video_juncheng', self.SHA1+'E')
+        db.new_video('tyler', 'video', self.SHA1+'EF', 'title', 'spot1')
+        db.new_video('tyler', 'video', self.SHA1+'F', 'title', 'spot2')
+        db.new_video('tyler', 'video', self.SHA1+'Z', 'title', 'spot3')
         db.add_follow('simsun', 'tyler')
         db.add_follow('simsun', 'juncheng')
         db.like_video('simsun', '1')

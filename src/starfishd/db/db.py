@@ -55,11 +55,12 @@ def _new_video(owner, filepath, sha1):
         vid = str(redis_client.incr(GLOBAL_VIDEOID_FLAG))
         db_video._init_empty_video_info(vid)
         redis_client.set(':'.join([VIDEO_SHA1, sha1, VID]), vid)
-
-        now  = gettime.gettime()      
+        
+        now  = gettime.gettime()
+        redis_client.set(':'.join([VID, vid, PUBLIC_TIME]), now.get())
         info = {VID:vid, VIDEO_SHA1:sha1, OWNER:owner, PUBLIC_TIME:now.get()}
         redis_client.hmset(':'.join([VID, vid, HASH]), info)
-
+        
         uid = db_user._get_user_id(owner)
         redis_client.lpush(':'.join([UID, uid, VIDEO_LIST]), vid)
         return vid
@@ -161,9 +162,33 @@ def _get_json_video_list(vidlist):
     mdict['total_size'] = len(vidlist)
     return mdict
     
-#def get_all_video(username):
+def _get_json_video_list_sortedbydate(vidlist,username):
+    video_list = []
+    for vid in vidlist:
+        video_list.append(vid)
+        redis_client.sadd(':'.join([USERNAME, username, SORTEDLIST]), vid)
+#    for elem in _get_json_video_list(video_list)['video_list']:
+#        print elem[PUBLIC_TIME]
+
+    redis_client.sort(':'.join([USERNAME,username, SORTEDLIST]), alpha=True, \
+                      by=':'.join([':'.join([VID, '*', PUBLIC_TIME])]))
+
+    for elem in  _get_json_video_list( redis_client.smembers( \
+            ':'.join([USERNAME, username, SORTEDLIST])))['video_list']:
+        print elem[PUBLIC_TIME]
+    return _get_json_video_list(redis_client.smembers(':'.join([USERNAME,  \
+                                                                username, SORTEDLIST])))
         
     
+def get_all_video(username):
+    video_list = []
+    uid = db_user._get_user_id(username)
+    userlist = db_user._get_user_following_list(uid)    
+    userlist.add(uid)
+    vid_list = []
+    for i in userlist:
+        vid_list.extend(get_video_list_byuserid(i))
+    return json.dumps(_get_json_video_list_sortedbydate(vid_list, username))
     
 def _clear_all():
     for elem in redis_client.keys():
