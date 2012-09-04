@@ -75,5 +75,10 @@ def _add_comment(username, vid, comment):
 def _get_comment(vid):
     comment_list = []
     comment_list = redis_client.lrange(':'.join([VID, vid, COMMENT]), 0, -1)
+    for i, elem in zip(xrange(len(comment_list)), comment_list):
+        elem = eval(elem)
+        username = elem['reviewer']
+        elem['reviewer'] = db_user._get_user_base_info(db_user._get_user_id(username))
+        comment_list[i] = elem
     return comment_list
 
