@@ -4,7 +4,7 @@ starfish
 依赖的资源
 
 server:
-1.uswgi
+1.uwsgi http://projects.unbit.it/uwsgi/wiki/Install
 2.web.py
 3.redis & redis-py
 web:
