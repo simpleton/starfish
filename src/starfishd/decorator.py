@@ -24,13 +24,3 @@ def check_video_exist_byid(func):
             return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], errorno.VIDEO_NOT_EXISTED[1]).dumps()
     return check
 
-
-def check_user_and_vid(func):
-    def check(username, videoid, *args):
-        if (not db.db.check_user_exist_by_name(username)):
-            return errorno.server_error(errorno.USER_NOT_EXISTED[0], errorno.USER_NOT_EXISTED[1]).dumps()
-        elif (not db.db.check_video_exist_by_id(videoid)):
-            return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], errorno.VIDEO_NOT_EXISTED[1]).dumps()
-        else:
-            return func(username, vid, *args)
-    return check
