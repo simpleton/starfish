@@ -31,6 +31,9 @@ def _set_video_public(vid , authority):
         #TODO: user check
         redis_client.hset(':'.join([VID, vid, HASH]), PUBLIC, authority)
 
+def _set_video_url(vid, url):
+    if (_check_video_existed(vid)):
+        redis_client.hset(':'.join([VID, vid, HASH]), URL, url)
 def _get_video_title(vid):
     return redis_client.hget(':'.join([VID, vid, HASH]), TITLE)
     
@@ -44,8 +47,7 @@ def _get_video_public(vid):
     return redis_client.hget(':'.join([VID, vid, HASH]), PUBLIC)
 
 def _get_video_url(vid):
-    #TODO: implement me
-    return 'www.soso.com'
+    return redis_client.hget(':'.join([VID, vid, HASH]), URL)
 
 def _get_video_owner(vid):
     return redis_client.hget(':'.join([VID, vid, HASH]), OWNER)
