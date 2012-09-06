@@ -31,9 +31,9 @@ just download the sourcecode and install
 **并enable proxy.conf proxy_http.load**
 enable只需建立ln即可，从mods-avaliable 到mod-enables
 
-	`ProxyPass /starfish http://127.0.0.1:9090 `
+	ProxyPass /starfish http://127.0.0.1:9090 
 	
-	`ProxyPassReverse /starfish http://127.0.0.1:9090`
+	ProxyPassReverse /starfish http://127.0.0.1:9090
 	
 http//127.0.0.1:9090是starfishd接收请求的url,
 
@@ -54,4 +54,4 @@ just for test
 
 please put the video in /var/www/video folder
 
-**must change the file mod to 755 , unless u will recevie 403 error when u try to access file**
+**must change the file mod to 755 , unless u will recevie 403 error when u try to access file **
