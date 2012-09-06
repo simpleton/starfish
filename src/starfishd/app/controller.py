@@ -85,6 +85,7 @@ class file_upload:
             place     = upfile.video_place
             title     = upfile.video_title
             authority = upfile.video_public
+            thumb_nail = upfile.thumb_nail
             filedir = 'tmp/'
 #            print owner, sha1.hexdigest(), authority, title
             if not os.path.exists(filedir):
@@ -99,7 +100,10 @@ class file_upload:
                     return errorno.server_error(errorno.VIDEO_ALREADY_EXISTED[0], errorno.VIDEO_ALREADY_EXISTED[1])
                 elif (ret == -2):
                     return 'user not existed'
-                
+            filepath_thumb = ''.join([filedir,'thumb',sha1.hexdigest(), '.png'])
+            with open(filepath_thumb, 'wb') as thumb_file:
+                thumb_file.write(thumb_nail.file.read())
+            with 
         except Exception as e:
             print traceback.print_exc()
             

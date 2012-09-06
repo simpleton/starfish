@@ -34,6 +34,11 @@ def _set_video_public(vid , authority):
 def _set_video_url(vid, url):
     if (_check_video_existed(vid)):
         redis_client.hset(':'.join([VID, vid, HASH]), URL, url)
+        
+def _set_video_thumb(vid, thumb_nail_url):
+    if (_check_video_existed(vid)):
+        redis_client.hset(':'.join([VID, vid, HASH]), THUMB_NAIL, thumb_nail_url)
+    
 def _get_video_title(vid):
     return redis_client.hget(':'.join([VID, vid, HASH]), TITLE)
     
