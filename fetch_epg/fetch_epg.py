@@ -4,6 +4,7 @@
 from url_builder import url_builder
 import urllib2
 import re
+from conf import channel
 from HTMLParser import HTMLParser
 
 class MyParser(HTMLParser):
@@ -28,7 +29,6 @@ class MyParser(HTMLParser):
 
     def check_item_format(self, item):
         #start with time,such as 12:12
-        print item
         epg_item = self.pattern.match(item)
         if epg_item == None:
             return False
@@ -41,10 +41,12 @@ class MyParser(HTMLParser):
                 return False
             
 if __name__ == '__main__':
-    full_url = url_builder('cctv1',day_delta=0).build()
-    html_data = urllib2.urlopen(full_url).read()
-    my = MyParser()
-    my.feed(html_data)
-    my.print_video_list()
+    channel = channel()
+    epg_parser = MyParser()
+    for ch in channel:
+        full_url = url_builder(ch, day_delta=0).build()
+        html_data = urllib2.urlopen(full_url).read()
+        epg_parser.feed(html_data)
+        epg_parser.print_video_list()
     
 
