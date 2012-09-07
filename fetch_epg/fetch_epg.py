@@ -6,13 +6,17 @@ import urllib2
 import re
 from conf import channel
 from HTMLParser import HTMLParser
+from db.db import db
 
 class MyParser(HTMLParser):
     def __init__(self):
         HTMLParser.__init__(self)
         self.video_list = []
         self.pattern = re.compile('(([1-9]{1})|([0-1][0-9])|([1-2][0-3])):([0-5][0-9])')
-        self.list = []
+        
+    def _clean_(self):
+        self.video_list = []
+        
     def handle_starttag(self, tag, attrs):
         pass
                 
@@ -23,10 +27,13 @@ class MyParser(HTMLParser):
             if filter_data:
                 self.video_list.append(filter_data)
         
-    def print_video_list(self):
+    def _print_video_list(self):
         for elem in self.video_list:
             print elem[0], unicode(elem[1], 'utf-8')
-
+            
+    def get_video_list(self):
+        return self.video_list
+        
     def check_item_format(self, item):
         #start with time,such as 12:12
         epg_item = self.pattern.match(item)
@@ -42,11 +49,14 @@ class MyParser(HTMLParser):
             
 if __name__ == '__main__':
     channel = channel()
+    epg_db = db()
     epg_parser = MyParser()
-    for ch in channel:
-        full_url = url_builder(ch, day_delta=0).build()
+    for i in channel:
+        full_url = url_builder(i, day_delta=0).build()
         html_data = urllib2.urlopen(full_url).read()
+        epg_parser._clean_()
         epg_parser.feed(html_data)
-        epg_parser.print_video_list()
-    
+        epg_db.insert(full_url, epg_parser.get_video_list())
+#        epg_parser.print_video_list()
 
+#   
