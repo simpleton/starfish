@@ -103,7 +103,6 @@ class file_upload:
             filepath_thumb = ''.join([filedir,'thumb',sha1.hexdigest(), '.png'])
             with open(filepath_thumb, 'wb') as thumb_file:
                 thumb_file.write(thumb_nail.file.read())
-            with 
         except Exception as e:
             print traceback.print_exc()
             
