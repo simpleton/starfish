@@ -11,7 +11,7 @@ class db:
 
     def insert(self, url, program):
         for elem in program:
-             self.client.rpush(url, elem)
+            self.client.rpush(url, elem)
 
     def select(self, url):
         return self.client.lrange(url, 0, -1)
@@ -30,6 +30,6 @@ class db:
 if __name__ == '__main__':
     tmp = db()
     tmp._dump_all_keys()
-    tmp._clear_all()
-    url = url_builder('cctv2').build()
-    print tmp.select(url)
+#    tmp._clear_all()
+#    url = url_builder('cctv2').build()
+#    print tmp.select(url)

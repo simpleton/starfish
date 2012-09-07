@@ -12,6 +12,14 @@ class url_builder:
         self.param['date']    = self._get_current_date()
         self.param['channel'] = channel
         
+    def set_data(self, year , month, day):
+        self.param['date'] = '-'.join(str(year), str(month), str(day))
+        return self
+    
+    def set_data_by_str(self, date_str):
+        self.param['date'] = date_str
+        return self
+    
     def build(self):
         url_param = urllib.urlencode(self.param)
         full_url  = ''.join([self.domain, '?', url_param])
