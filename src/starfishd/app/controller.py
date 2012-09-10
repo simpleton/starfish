@@ -87,24 +87,31 @@ class file_upload:
             authority = upfile.get('video_is_public')
 
             print owner,place,title,authority 
-            filedir = '/var/www/video/'
+            urldir = '/video/'
+            filedir = '/var/www' + urldir
 #            print owner, sha1.hexdigest(), authority, title
             if not os.path.exists(filedir):
                 os.mkdir(filedir)
 
             sha1.update(upfile.uploaded_file.value)      
+            
             filepath = ''.join([filedir, sha1.hexdigest(), '.mp4'])
             with open(filepath, 'wb') as saved:
                 saved.write(upfile.uploaded_file.file.read())
-                ret = db.db.new_video(owner, filepath, sha1.hexdigest(), title, place)
-                print 'add new video ', ret
-                if (ret == -1):
-                    return errorno.server_error(errorno.VIDEO_ALREADY_EXISTED[0], errorno.VIDEO_ALREADY_EXISTED[1])
-                elif (ret == -2):
-                    return 'user not existed'
+
             filepath_thumb = ''.join([filedir,'thumb',sha1.hexdigest(), '.png'])
             with open(filepath_thumb, 'wb') as thumb_file:
                 thumb_file.write(upfile.thumb_nail.file.read())
+                
+            video_url = ''.join([urldir, sha1.hexdigest(), '.mp4'])
+            thumb_url = ''.join([urldir, sha1.hexdigest(), '.png'])
+            
+            ret = db.db.new_video(owner, filepath, sha1.hexdigest(), title, place,url=video_url, thumb_url=thumb_url)
+            if (ret == -1):
+                return errorno.server_error(errorno.VIDEO_ALREADY_EXISTED[0], errorno.VIDEO_ALREADY_EXISTED[1])
+            elif (ret == -2):
+                return 'user not existed'
+
         except Exception as e:
             print traceback.print_exc()
             

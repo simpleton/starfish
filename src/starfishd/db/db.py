@@ -68,7 +68,7 @@ def _new_video(owner, filepath, sha1):
         #already in database
         return -1
     
-def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1',url='/video/1.mp4',thumb_url='/thumb/default.png'):
+def new_video(owner, filepath, sha1, title, spot, is_hot='0', is_public='1',url='/video/1.mp4',thumb_url='/video/default.png'):
     vid = _new_video(owner, filepath, sha1)
     if (vid > 0):
         db_video._set_video_spot(vid, spot)
