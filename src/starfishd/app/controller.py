@@ -80,7 +80,7 @@ class file_upload:
     def POST(self):
         try:
             sha1 = hashlib.sha1()
-            upfile    = web.input(uploaded_file={}, thumb_nail={})
+            upfile    = web.input(uploaded_file={})
             owner     = upfile.get('video_owner')
             place     = upfile.get('video_place')
             title     = upfile.get('video_title')
@@ -92,10 +92,9 @@ class file_upload:
             if not os.path.exists(filedir):
                 os.mkdir(filedir)
 
-            sha1.update(upfile.uploaded_file.file.read())      
+            sha1.update(upfile.uploaded_file.value)      
             filepath = ''.join([filedir, sha1.hexdigest(), '.mp4'])
             with open(filepath, 'wb') as saved:
-                print upfile.uploaded_file.file.read()
                 saved.write(upfile.uploaded_file.file.read())
                 ret = db.db.new_video(owner, filepath, sha1.hexdigest(), title, place)
                 print 'add new video ', ret
