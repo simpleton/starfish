@@ -80,19 +80,22 @@ class file_upload:
     def POST(self):
         try:
             sha1 = hashlib.sha1()
-            upfile    = web.input(uploaded_file={})
-            owner     = upfile.video_owner
-            place     = upfile.video_place
-            title     = upfile.video_title
-            authority = upfile.video_public
-            thumb_nail = upfile.thumb_nail
-            filedir = 'tmp/'
+            upfile    = web.input(uploaded_file={}, thumb_nail={})
+            owner     = upfile.get('video_owner')
+            place     = upfile.get('video_place')
+            title     = upfile.get('video_title')
+            authority = upfile.get('video_is_public')
+
+            print owner,place,title,authority 
+            filedir = '/var/www/video/'
 #            print owner, sha1.hexdigest(), authority, title
             if not os.path.exists(filedir):
                 os.mkdir(filedir)
+
             sha1.update(upfile.uploaded_file.file.read())      
             filepath = ''.join([filedir, sha1.hexdigest(), '.mp4'])
             with open(filepath, 'wb') as saved:
+                print upfile.uploaded_file.file.read()
                 saved.write(upfile.uploaded_file.file.read())
                 ret = db.db.new_video(owner, filepath, sha1.hexdigest(), title, place)
                 print 'add new video ', ret
@@ -102,7 +105,7 @@ class file_upload:
                     return 'user not existed'
             filepath_thumb = ''.join([filedir,'thumb',sha1.hexdigest(), '.png'])
             with open(filepath_thumb, 'wb') as thumb_file:
-                thumb_file.write(thumb_nail.file.read())
+                thumb_file.write(upfile.thumb_nail.file.read())
         except Exception as e:
             print traceback.print_exc()
             
