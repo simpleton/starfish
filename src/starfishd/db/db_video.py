@@ -5,7 +5,8 @@ import gettime
 import db_user
 
 def _init_empty_video_info(vid):
-    item = {SPOT:'null', POPULAR:'0', TITLE:'null', PUBLIC:'1', URL:'null', VIDEO_SHA1:'null', OWNER:'null', VID:'null'}
+    item = {SPOT:'null', POPULAR:'0', TITLE:'null', PUBLIC:'1', \
+            URL:'null', VIDEO_SHA1:'null', OWNER:'null', VID:'null', THUMB_NAIL:'null'}
     redis_client.hmset(':'.join([VID, vid, HASH]), item)
     
 def _check_video_existed(vid):
