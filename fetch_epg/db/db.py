@@ -4,6 +4,7 @@ import sys
 sys.path.append('..')
 import redis
 import traceback
+import json
 from util_time import mytime
 from url_builder import url_builder
 from urlparse import urlparse,parse_qs
@@ -44,19 +45,23 @@ class db:
     def get_showing_list(self):
         now_day = self.mytime.get_now_in_day()
         now_hour_min = self.mytime.get_now_in_minute()
+        mlist = []
         for url in self._dump_someday_keys(now_day):
-            tmp = self._find_showing(self.select(url) ,now_hour_min)
+            mdict = {}
+            item = self._find_showing(self.select(url) ,now_hour_min)
             url_param = parse_qs(urlparse(url).query)
-            print url_param.get('channel')[0]
-                
-            if tmp:
-                tmp = eval(tmp)
-                print tmp[0], unicode(tmp[1], 'utf-8')
+            mdict['channel'] = url_param.get('channel')[0]
+            if item:
+                item = eval(item)
+                mdict['time'] = item[0]
+                mdict['program'] = item[1]
+                #print item[0], unicode(item[1], 'utf-8')
             else:
-                print 'no program'
-            for i in self.select(url):
-               # print i
-               pass
+                mdict['time'] = '24:00'
+                mdict['program'] = 'no program'
+            mlist.append(mdict)
+            
+        return mlist
     def _find_showing(self, list, time):
         """the format of the element of list is (time, program_name)"""
         end   = len(list)
