@@ -171,15 +171,14 @@ def _get_json_video_list_sortedbydate(vidlist,username):
         redis_client.sadd(':'.join([USERNAME, username, SORTEDLIST]), vid)
 #    for elem in _get_json_video_list(video_list)['video_list']:
 #        print elem[PUBLIC_TIME]
+#    print redis_client.smembers(':'.join([USERNAME, username, SORTEDLIST]))
+    sorted_list = redis_client.sort(':'.join([USERNAME,username, SORTEDLIST]) , \
+                                    desc=True, \
+                                    by=':'.join([':'.join([VID, '*', PUBLIC_TIME])]))
 
-    redis_client.sort(':'.join([USERNAME,username, SORTEDLIST]), alpha=True, \
-                      by=':'.join([':'.join([VID, '*', PUBLIC_TIME])]))
-
-    for elem in  _get_json_video_list( redis_client.smembers( \
-            ':'.join([USERNAME, username, SORTEDLIST])))['video_list']:
+    for elem in  _get_json_video_list(sorted_list)['video_list']:
         print elem[PUBLIC_TIME]
-    return _get_json_video_list(redis_client.smembers(':'.join([USERNAME,  \
-                                                                username, SORTEDLIST])))
+    return _get_json_video_list(sorted_list)
     
 def get_all_video(username):
     video_list = []
