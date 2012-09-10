@@ -99,7 +99,7 @@ class file_upload:
             with open(filepath, 'wb') as saved:
                 saved.write(upfile.uploaded_file.file.read())
 
-            filepath_thumb = ''.join([filedir,'thumb',sha1.hexdigest(), '.png'])
+            filepath_thumb = ''.join([filedir, sha1.hexdigest(), '.png'])
             with open(filepath_thumb, 'wb') as thumb_file:
                 thumb_file.write(upfile.thumb_nail.file.read())
                 
