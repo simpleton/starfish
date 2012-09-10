@@ -80,7 +80,7 @@ class file_upload:
     def POST(self):
         try:
             sha1 = hashlib.sha1()
-            upfile    = web.input(uploaded_file={})
+            upfile    = web.input(uploaded_file={}, thumb_nail={})
             owner     = upfile.get('video_owner')
             place     = upfile.get('video_place')
             title     = upfile.get('video_title')
