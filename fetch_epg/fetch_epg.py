@@ -49,28 +49,29 @@ class MyParser(HTMLParser):
             
 class EPG:
     def __init__(self):
-        self.channel = channel()
         self.model        = db()
         self.epg_parser   = MyParser()
 
     def get(self, date):
         """the format of date is yyyy-mm-dd"""
-        for i in channel:
-            full_url = url_builder(i).set_data_by_str(date).build()
-            html_data = urllib2.urlopen(full_url).read()
-            self.epg_parser._clean_()
-            self.epg_parser.feed(html_data)
-            self.model.insert(full_url, self.epg_parser.get_video_list())
+        self._fetch(date)
     
     def get_today(self):
         """the format of date is yyyy-mm-dd"""
-        for i in self.channel:
-            full_url = url_builder(i).build()
+        self._fetch()
+        
+    def _fetch(self, date=''):
+        for i in channel():
+            if (date!=''):
+                full_url = url_builder(i).set_data_by_str(date).build()
+            else:
+                full_url = url_builder(i).build()
+            print full_url
             html_data = urllib2.urlopen(full_url).read()
             self.epg_parser._clean_()
             self.epg_parser.feed(html_data)
             self.model.insert(full_url, self.epg_parser.get_video_list())
-
+        
 if __name__ == '__main__':
     EPG().get_today()
     
