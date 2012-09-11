@@ -10,7 +10,8 @@ from db.db import db
 
 urls = (
     '/echo',    'echo',
-    '/list',    'list'
+    '/list',    'list',
+    '/showing', 'showing_list'
     )
 app = web.application(urls, globals())
 
@@ -29,9 +30,29 @@ class list:
             return 'error'
         else:
             url = url_builder(channel).set_data_by_str(date).build()
-            tmp = db()
-            return tmp.select(url)
-            
+            model = db()
+            mdict = {}
+            mdict['date'] = date
+            mdict['channel'] = channel
+            mdict['list'] = []
+            plist = model.select(url)
+            for prog in plist:
+                tmp = {}
+                prog = eval(prog)
+                tmp['time'] = prog[0]
+                tmp['name'] = prog[1]
+                mdict['list'].append(tmp)
+                
+            return json.dumps(mdict)
+
+class showing_list:
+    def GET(self):
+        mdict = {}
+        program_list = db().get_showing_list()
+        mdict['total_size'] = len(program_list)
+        mdict['list']       = program_list
+        return json.dumps(mdict)
+    
 application = app.wsgifunc()
 if __name__ == "__main__":
     app.run()
