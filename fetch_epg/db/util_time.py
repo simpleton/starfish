@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime
+from urlparse import urlparse, parse_qs
 
 class mytime:
     def __init__(self):
@@ -28,3 +29,15 @@ class mytime:
         now_hour_min = ':'.join([str(now.tm_hour), str(now.tm_min)])
         return now_hour_min
         
+
+    def get_date_from_url(self, url):
+        """get the date parameter in url"""
+        return self.get_param_from_url(url,'date')
+    
+    def get_param_from_url(self, url, param_name):
+        url_param = parse_qs(urlparse(url).query)
+        return url_param.get('date')[0]
+         
+if __name__ == '__main__':
+    mytime = mytime()
+    print mytime.get_date_from_url('http://localhost/epg/list?date=2012-9-11&channel=cctv1')
