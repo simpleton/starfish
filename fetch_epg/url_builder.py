@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import urllib
-from datetime import datetime
+from datetime import datetime,timedelta
 
 class url_builder:
     def __init__(self, channel, day_delta = 0):
@@ -17,6 +17,7 @@ class url_builder:
         return self
     
     def set_data_by_str(self, date_str):
+        """the format of date_str should be yyyy-mm-dd"""
         self.param['date'] = date_str
         return self
     
@@ -26,8 +27,11 @@ class url_builder:
         return full_url
 
     def _get_current_date(self):
-        now = datetime.now().timetuple()
-        return '-'.join([str(now.tm_year), str(now.tm_mon), str(now.tm_mday + self.day_delta)])
+        #now = datetime.now().timetuple()
+        now = datetime.now()
+        delta = timedelta(days=self.day_delta)
+        future = (now + delta).timetuple()
+        return '-'.join([str(future.tm_year), str(future.tm_mon), str(future.tm_mday)])
 
 if __name__ == '__main__':
     url = url_builder('cctv1').build()

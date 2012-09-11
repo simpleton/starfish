@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+
 class channel:
     def __init__(self, classify='cctv'):
         

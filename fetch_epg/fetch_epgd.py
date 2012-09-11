@@ -38,10 +38,11 @@ class list:
             plist               = model.select(url)
             mdict['total_size'] = len(plist)
             for prog in plist:
-                tmp = {}
-                prog = eval(prog)
-                tmp['time'] = prog[0]
-                tmp['name'] = prog[1]
+                tmp              = {}
+                prog             = eval(prog)
+                tmp['time']      = prog[0]
+                tmp['name']      = prog[1]
+                tmp['cover_url'] = "www.qq.com"
                 mdict['list'].append(tmp)
                 
             return json.dumps(mdict)
@@ -50,6 +51,8 @@ class showing_list:
     def GET(self):
         mdict                 = {}
         program_list,now      = db().get_showing_list()
+        for elem in program_list:
+            elem['cover_url'] = "www.qq.com"
         mdict['total_size']   = len(program_list)
         mdict['list']         = program_list
         mdict['current_time'] = now

@@ -47,16 +47,43 @@ class MyParser(HTMLParser):
             else :
                 return False
             
-if __name__ == '__main__':
-    channel = channel()
-    epg_db = db()
-    epg_parser = MyParser()
-    for i in channel:
-        full_url = url_builder(i, day_delta=0).build()
-        html_data = urllib2.urlopen(full_url).read()
-        epg_parser._clean_()
-        epg_parser.feed(html_data)
-        epg_db.insert(full_url, epg_parser.get_video_list())
-#        epg_parser.print_video_list()
+class EPG:
+    def __init__(self):
+        self.channel = channel()
+        self.model        = db()
+        self.epg_parser   = MyParser()
 
-#   
+    def get(self, date):
+        """the format of date is yyyy-mm-dd"""
+        for i in channel:
+            full_url = url_builder(i).set_data_by_str(date).build()
+            html_data = urllib2.urlopen(full_url).read()
+            self.epg_parser._clean_()
+            self.epg_parser.feed(html_data)
+            self.model.insert(full_url, self.epg_parser.get_video_list())
+    
+    def get_today(self):
+        """the format of date is yyyy-mm-dd"""
+        for i in self.channel:
+            full_url = url_builder(i).build()
+            html_data = urllib2.urlopen(full_url).read()
+            self.epg_parser._clean_()
+            self.epg_parser.feed(html_data)
+            self.model.insert(full_url, self.epg_parser.get_video_list())
+
+if __name__ == '__main__':
+    EPG().get_today()
+    
+#     channel = channel()
+#     epg_db = db()
+#     epg_parser = MyParser()
+#     for i in channel:
+#         full_url = url_builder(i, day_delta=0).build()
+#         html_data = urllib2.urlopen(full_url).read()
+#         epg_parser._clean_()
+#         epg_parser.feed(html_data)
+#         epg_db.insert(full_url, epg_parser.get_video_list())
+# #        epg_parser.print_video_list()
+
+ 
+   
