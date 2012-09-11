@@ -21,7 +21,7 @@ just download the sourcecode and install
 
 ## GET interface##
 
-`domain/epg/list?date=2012-9-10&channel=cctv1`
+`domain/epg/list?date=yyyy-mm-dd&channel=cctv1`
 
 return json format date
 
@@ -39,10 +39,19 @@ return json format date
 	{
 		total_size:xxx,
 		current_time:xxx,
-		list:[{program:xxx, time:xx:xx, channel:xxx, cover:xxx},
+		list:[{program:xxx, time:mm:ss, channel:xxx, cover:xxx},
 		       ........]
 	}
 
+`domain/epg/show?clocktime=mm:ss&daytime=yyyy-mm-dd`
+
+	{
+		total_size:xxx,
+		day:yyyy-mm-dd,
+		list:[{program:xxx ,time:mm:ss, channel:xxx, cover:xxx},
+		      ...........]
+	}
+	
 #### 部署方式 ####
 
 1. 安装webserver,设置端口转发

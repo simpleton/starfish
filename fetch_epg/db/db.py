@@ -55,10 +55,13 @@ class db:
     def get_showing_list(self):
         now_day = self.mytime.get_now_in_day()
         now_hour_min = self.mytime.get_now_in_minute()
+        return self.get_certaintime_list(now_hour_min, now_day)
+    
+    def get_certaintime_list(self, clocktime, daytime):
         mlist = []
-        for url in self._dump_someday_keys(now_day):
+        for url in self._dump_someday_keys(daytime):
             mdict = {}
-            item = self._find_showing(self.select(url) ,now_hour_min)
+            item = self._find_showing(self.select(url) ,clocktime)
             mdict['channel'] = self.mytime.get_param_from_url(url,'channel')
             
             if item:
@@ -70,26 +73,30 @@ class db:
                 mdict['time'] = '24:00'
                 mdict['program'] = 'no program'
             mlist.append(mdict)
-        return (mlist, now_hour_min)
-    
+        return (mlist, clocktime)
+        
     def _find_showing(self, list, time):
         """the format of the element of list is (time, program_name)"""
-        end   = len(list)
+#        print "==========================="
+        list.append("('24:00', 'just the end of the day')")
+        mmax  = len(list) - 1
+        end   = mmax
         start = 0
         pos   = (start+end)/2
         time = self.mytime.str2num(time)
-        #binary search
-        while start <= end and end > 0:
-            #print time
-            #print start , pos ,end
+        #binary search.  pos == mmax will never happend
+        while start <= end and end > 0 and pos <= mmax:
+            # print time
+            # print start , pos ,end
+            # print self.mytime.get_time(list, pos), self.mytime.get_time(list, pos+1)
             if (self.mytime.get_time(list, pos) <= time) and  \
                (self.mytime.get_time(list, pos+1) > time):
                  break
             else:
-                if self.mytime.get_time(list, pos+1) < time:
+                if self.mytime.get_time(list, pos+1) <= time:
                     start = pos + 1
                 else:
-                    end = pos
+                    end = pos 
                 pos = (start+end)/2
                 
         if (self.mytime.get_time(list, pos) <= time):
