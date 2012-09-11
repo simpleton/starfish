@@ -47,7 +47,7 @@ return json format date
 
 	{
 		total_size:xxx,
-		day:yyyy-mm-dd,
+		query_time:xxx,
 		list:[{program:xxx ,time:mm:ss, channel:xxx, cover:xxx},
 		      ...........]
 	}
