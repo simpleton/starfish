@@ -60,8 +60,8 @@ class db:
                 mdict['time'] = '24:00'
                 mdict['program'] = 'no program'
             mlist.append(mdict)
-            
-        return mlist
+        return (mlist, now_hour_min)
+    
     def _find_showing(self, list, time):
         """the format of the element of list is (time, program_name)"""
         end   = len(list)

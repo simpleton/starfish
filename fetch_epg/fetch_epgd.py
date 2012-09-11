@@ -30,12 +30,13 @@ class list:
             return 'error'
         else:
             url = url_builder(channel).set_data_by_str(date).build()
-            model = db()
-            mdict = {}
-            mdict['date'] = date
-            mdict['channel'] = channel
-            mdict['list'] = []
-            plist = model.select(url)
+            model               = db()
+            mdict               = {}
+            mdict['date']       = date
+            mdict['channel']    = channel
+            mdict['list']       = []
+            plist               = model.select(url)
+            mdict['total_size'] = len(plist)
             for prog in plist:
                 tmp = {}
                 prog = eval(prog)
@@ -47,10 +48,11 @@ class list:
 
 class showing_list:
     def GET(self):
-        mdict = {}
-        program_list = db().get_showing_list()
-        mdict['total_size'] = len(program_list)
-        mdict['list']       = program_list
+        mdict                 = {}
+        program_list,now      = db().get_showing_list()
+        mdict['total_size']   = len(program_list)
+        mdict['list']         = program_list
+        mdict['current_time'] = now
         return json.dumps(mdict)
     
 application = app.wsgifunc()
