@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
-__author__ = 'xbfool'
+__author__ = 'simsun'
 
 import web
 import json
