@@ -10,8 +10,9 @@ from db.db import db
 from fetch_epg import EPG
 urls = (
     '/echo',    'echo',
-    '/list',    'list',
-    '/showing', 'showing_list'
+    '/list',    'channel_list',
+    '/showing', 'showing_list',
+    '/show',    'certaintime_list'
     )
 app = web.application(urls, globals())
 epg = EPG()
@@ -21,7 +22,7 @@ class echo:
         input_data = web.input()
         return input_data.get('an')
         
-class list:
+class channel_list:
     def GET(self):
         input_data = web.input()
         channel    = input_data.get('channel')
@@ -68,6 +69,22 @@ class showing_list:
         mdict['current_time'] = now
         return json.dumps(mdict)
     
+class certaintime_list:
+    def GET(self):
+        mdict      = {}
+        input_data = web.input()
+        day_time   = input_data.get('daytime')
+        clock_time = input_data.get('clocktime')
+        
+        program_list,query_time = db().get_certaintime_list(clock_time, day_time)
+        
+        for elem in program_list:
+            elem['cover_url'] = "www.qq.com"
+        mdict['total_size']   = len(program_list)
+        mdict['list']         = program_list
+        mdict['query_time'] = query_time
+        return json.dumps(mdict)
+        
 application = app.wsgifunc()
 if __name__ == "__main__":
     app.run()
