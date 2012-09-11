@@ -15,14 +15,15 @@ class db:
         self.mytime = mytime()
 
     def insert(self, url, program):
-        for elem in program:     
-            self.client.rpush(url, elem)
-            url_param = parse_qs(urlparse(url).query)
-            try:
-                insert_date = url_param.get('date')[0]
-                self.client.sadd(':'.join(['DATA', insert_date, 'SET']), url)
-            except Exception as e:
-                print traceback.print_exc()
+        if (not self.client.exists(url)):
+            for elem in program:     
+                self.client.rpush(url, elem)
+                url_param = parse_qs(urlparse(url).query)
+                try:
+                    insert_date = url_param.get('date')[0]
+                    self.client.sadd(':'.join(['DATA', insert_date, 'SET']), url)
+                except Exception as e:
+                    print traceback.print_exc()
                 
     
     def select(self, url):
@@ -32,8 +33,8 @@ class db:
         for i in  self.client.keys():
             print i
             #for j in self.select(i):
-             #   j = eval(j)
-              #  print j[0], unicode(j[1], 'utf-8')
+            #    j = eval(j)
+            #    print j[0], unicode(j[1], 'utf-8')
                 
     def _dump_someday_keys(self, date):
         return self.client.smembers(':'.join(['DATA', date, 'SET']))
@@ -85,14 +86,12 @@ class db:
             return list[pos]
         else:
             return False
-
-    
+        
         
 if __name__ == '__main__':
     tmp = db()
     tmp._dump_all_keys()
-    url_param = parse_qs(urlparse("http://localhost/epg/list?channel=cctv1&date=2012-9-9").query)
-   # tmp._clear_all()
+    #tmp._clear_all()
     tmp.get_showing_list()
 #    url = url_builder('cctv2').build()
 #    print tmp.select(url)
