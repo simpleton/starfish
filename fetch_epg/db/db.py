@@ -67,11 +67,11 @@ class db:
             if item:
                 item = eval(item)
                 mdict['time'] = item[0]
-                mdict['program'] = item[1]
+                mdict['name'] = item[1]
                 #print item[0], unicode(item[1], 'utf-8')
             else:
                 mdict['time'] = '24:00'
-                mdict['program'] = 'no program'
+                mdict['name'] = 'no program'
             mlist.append(mdict)
         return (mlist, clocktime)
         

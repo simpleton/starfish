@@ -36,7 +36,7 @@ class mytime:
     
     def get_param_from_url(self, url, param_name):
         url_param = parse_qs(urlparse(url).query)
-        return url_param.get('date')[0]
+        return url_param.get(param_name)[0]
          
 if __name__ == '__main__':
     mytime = mytime()

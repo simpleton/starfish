@@ -39,7 +39,7 @@ return json format date
 	{
 		total_size:xxx,
 		current_time:xxx,
-		list:[{program:xxx, time:mm:ss, channel:xxx, cover:xxx},
+		list:[{name:xxx, time:mm:ss, channel:xxx, cover_url:xxx},
 		       ........]
 	}
 
@@ -48,7 +48,7 @@ return json format date
 	{
 		total_size:xxx,
 		query_time:xxx,
-		list:[{program:xxx ,time:mm:ss, channel:xxx, cover:xxx},
+		list:[{name:xxx ,time:mm:ss, channel:xxx, cover_url:xxx},
 		      ...........]
 	}
 	
