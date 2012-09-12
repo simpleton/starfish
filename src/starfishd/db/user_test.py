@@ -18,8 +18,6 @@ class user_testcase(unittest.TestCase):
         name = 'thisnamecannotexists'  
         self.assertFalse(self.user_model._check_user_exist_by_name(name))
         
-def suite():
-    return unittest.makeSuite(user_testcase)
 
 if __name__ == "__main__":
     suite1 = unittest.TestLoader().loadTestsFromTestCase( \
