@@ -3,14 +3,16 @@
 
 __author__ = 'simsun'
 
+import sys
+sys.path.append('..')
+from errorcode_builder import server_error as errorno
 import os
 import web
 import json
-import db.db
 import traceback
 import hashlib
-import errorcode_builder as errorno
 from decorator import *
+from db.db import mmodel
 
 
 class echo_test:
@@ -27,13 +29,12 @@ class echo_test:
 class user_add:
     """add new user"""
     def POST(self):
+        model = mmodel()
         try:
             data = json.loads(web.data())
-            if (not db.db.check_user_exist_by_name(data['username'])):
-                print "add user"
-                db.db.new_user(data['username'],data['head_image'])
+            if (not model.check_user_exist_by_name(data['username'])):
+                model.new_user(data['username'],data['head_image'])
             else:
-                print "user already existed"
                 return "user already existed"
         except Exception as e:
             print traceback.print_exc()
