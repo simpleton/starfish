@@ -18,7 +18,7 @@ def check_user_and_vid(func):
             return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], \
                                         errorno.VIDEO_NOT_EXISTED[1]).dumps()
         else:
-            func(self, username, videoid, *args)
+            return func(self, username, videoid, *args)
     return check
     
 class mmodel(base_model):
@@ -40,7 +40,7 @@ class mmodel(base_model):
             userid = str(self.redis_client.incr(self.GLOBAL_USERID_FLAG))
             print ':'.join([self.USERNAME,username,self.UID])
 
-            self.redis_client.set(':'.join([USERNAME, username,  self.UID]), userid)
+            self.redis_client.set(':'.join([self.USERNAME, username,  self.UID]), userid)
             userinfo = {self.USERNAME  : username,
                         self.HEADIMAGE : head_image,
                         self.UID       :userid}
@@ -102,17 +102,35 @@ class mmodel(base_model):
     def _add_follow(self, selfid, friendid):
         self.user._add_following(selfid, friendid)
         self.user._add_follower(friendid, selfid)
-
+        
+    @check_user_and_vid
     def like_video(self, username, videoid):
         uid = self.user._get_user_id(username)
         self.user._add_like_video(uid, videoid)
         self.video._add_liked_user(videoid, uid)
-
+        
+    @check_user_and_vid
     def dislike_video(self, username, videoid):
         uid = self.user._get_user_id(username)
         self.user._remove_like_video(uid, videoid)
-        self.video._remove_like_user(uid, videoid)
-            
+        self.video._remove_liked_user(videoid, uid)
+        
+    @check_user_and_vid
+    def is_user_like_video(self, username, videoid):
+        uid = self.user._get_user_id(username)
+        if (self.user.is_like_video(uid ,videoid)   \
+            and self.video.is_liked_user(videoid, uid)):
+            print 'user_like_video'
+            return True
+        elif (not self.user.is_like_video(uid, videoid))  \
+             and (not self.video.is_liked_user(videoid, uid)):
+            print 'user_dislike_video'
+            return False
+        else:
+            print "like status exist inconsistent!!!"
+            return False
+    
+    
     def get_videoliked_user_list(self, vid):
         if (self.video._check_video_existed(vid)):
             userlist = self.video._get_liked_user_list(vid)
@@ -214,8 +232,5 @@ class mmodel(base_model):
 if __name__ == '__main__':
     now = gettime.gettime()
     print now.get()
-    tmp = model()
-    tmp.new_user('simsun', "www.soso.com")
-
     tmp._clear_all()
     tmp._print_all_user()

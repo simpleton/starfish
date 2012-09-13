@@ -38,7 +38,10 @@ class user_model(base_model):
         self.redis_client.sadd(':'.join([self.UID, uid, self.LIKE_VIDEO_LIST]), vid)
         
     def _remove_like_video(self, uid, vid):
-        self.redis_client.srem(':'.join(self.UID, uid, self.LIKE_VIDEO_LIST), vid)    
+        self.redis_client.srem(':'.join([self.UID, uid, self.LIKE_VIDEO_LIST]), vid)    
+        
+    def is_like_video(self, uid ,vid):
+        return self.redis_client.sismember(':'.join([self.UID, uid, self.LIKE_VIDEO_LIST]), vid)
         
     def _get_like_video_list(self, uid):
         return self.redis_client.smembers(':'.join([self.UID, uid, self.LIKE_VIDEO_LIST]))

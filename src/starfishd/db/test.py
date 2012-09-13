@@ -101,7 +101,14 @@ class video_singal_query_testcase(unittest.TestCase):
         self.db.like_video('simsun','1')
     
     def test_dislike_video(self):
+        self.db.dislike_video('simsun', '1')
+        
+    def test_is_user_like_video(self):
         self.db.like_video('simsun', '1')
+        self.assertTrue(self.db.is_user_like_video('simsun', '1'))
+        
+        self.db.dislike_video('simsun', '1')
+        self.assertFalse(self.db.is_user_like_video('simsun', '1'))
         
 if __name__ == "__main__":
     suite1 = unittest.TestLoader().loadTestsFromTestCase( \

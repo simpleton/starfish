@@ -24,8 +24,8 @@ urls = (
     '/video/comment/(.*)',        'app.controller.video_comment',
     '/allvideo/(.*)',             'app.controller.all_video',
     '/user/headimage/(.*)',       'app.controller.upload_headimage',
-    '/video/like/',          'app.controller.like_video',
-    '/video/dislike/',       'app.controller.dislike_video',
+    '/video/like/(\d+)',          'app.controller.like_video',
+    '/video/dislike/(\d+)',       'app.controller.dislike_video',
     '/video/comment/(\d+)',       'app.controller.comment'
         
     )

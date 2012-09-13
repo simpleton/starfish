@@ -161,22 +161,30 @@ class all_video:
 
 
 class upload_headimage:
-    @check_user_exist_by_name
-    def POST(self, username):
+    def POST(self):
+        input_data = web.input(head_image={})
         model = mmodel()
-        #TODO:
-
+        
+        
+    
 class like_video:
-    @check_video_exist_byid
-    def POST(self, vid):
+    def POST(self):
         input_data = web.intpu()
-        #TODO:
+        username   = input_data.get('username')
+        vid        = input_date.get('video_id')
+        model      = mmodel()
+        
+        if (model.is_user_like_video(username, vid)):
+            model.like_video(username, vid)
+        else:
+            model.dislike_video(username, vid)
+        
 
-class dislike_video:
-    @check_video_exist_byid
-    def POST(self, vid):
-        #TODO:
-        return 'NOT IMPLEMENT'
+# class dislike_video:
+#     @check_video_exist_byid
+#     def POST(self, vid):
+#         #TODO:
+#         return 'NOT IMPLEMENT'
 
 class comment:
     @check_video_exist_byid
