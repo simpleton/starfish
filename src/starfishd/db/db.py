@@ -180,17 +180,17 @@ class mmodel(base_model):
         video_list = []
         for vid in vidlist:
             video_list.append(vid)
-            self.redis_client.sadd(':'.join([self.USERNAME, username, SORTEDLIST]), vid)
+            self.redis_client.sadd(':'.join([self.USERNAME, username, self.SORTEDLIST]), vid)
             #    for elem in _get_json_video_list(video_list)['video_list']:
             #        print elem[PUBLIC_TIME]
             #    print self.redis_client.smembers(':'.join([self.USERNAME, username, SORTEDLIST]))
-        sorted_list = self.redis_client.sort(':'.join([self.USERNAME,username, SORTEDLIST]) , \
+        sorted_list = self.redis_client.sort(':'.join([self.USERNAME,username, self.SORTEDLIST]) , \
                                         desc=True, \
-                                        by=':'.join([':'.join([self.VID, '*', PUBLIC_TIME])]))
+                                        by=':'.join([':'.join([self.VID, '*', self.PUBLIC_TIME])]))
 
-        for elem in  _get_json_video_list(sorted_list)['video_list']:
-            print elem[PUBLIC_TIME]
-        return _get_json_video_list(sorted_list)
+        for elem in self._get_json_video_list(sorted_list)['video_list']:
+            print elem[self.PUBLIC_TIME]
+        return self._get_json_video_list(sorted_list)
     
     def get_all_video(self, username):
         video_list = []
@@ -199,8 +199,8 @@ class mmodel(base_model):
         userlist.add(uid)
         vid_list = []
         for i in userlist:
-            vid_list.extend(get_video_list_byuserid(i))
-        return json.dumps(_get_json_video_list_sortedbydate(vid_list, username))
+            vid_list.extend(self.get_video_list_byuserid(i))
+        return json.dumps(self._get_json_video_list_sortedbydate(vid_list, username))
     
     def _clear_all(self):
         for elem in self.redis_client.keys():
