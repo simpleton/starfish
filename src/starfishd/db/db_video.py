@@ -80,6 +80,9 @@ class video_model(base_model):
     def _add_liked_user(self, vid, uid):
         self.redis_client.sadd(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]), uid)
 
+    def _remove_liked_user(self, vid, uid):
+        self.redis_client.srem(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]), uid)
+        
     def _get_liked_user_list(self, vid):
         return self.redis_client.smembers(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]))
     

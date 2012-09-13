@@ -158,3 +158,28 @@ class all_video:
     def GET(self, username):
         model = mmodel()
         return model.get_all_video(username)
+
+
+class upload_headimage:
+    @check_user_exist_by_name
+    def POST(self, username):
+        model = mmodel()
+        #TODO:
+
+class like_video:
+    @check_video_exist_byid
+    def POST(self, vid):
+        input_data = web.intpu()
+        #TODO:
+
+class dislike_video:
+    @check_video_exist_byid
+    def POST(self, vid):
+        #TODO:
+        return 'NOT IMPLEMENT'
+
+class comment:
+    @check_video_exist_byid
+    def POST(self, vid):
+        #TODO:
+        return 'NOT IMPLEMENT'

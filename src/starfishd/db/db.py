@@ -108,6 +108,11 @@ class mmodel(base_model):
         self.user._add_like_video(uid, videoid)
         self.video._add_liked_user(videoid, uid)
 
+    def dislike_video(self, username, videoid):
+        uid = self.user._get_user_id(username)
+        self.user._remove_like_video(uid, videoid)
+        self.video._remove_like_user(uid, videoid)
+            
     def get_videoliked_user_list(self, vid):
         if (self.video._check_video_existed(vid)):
             userlist = self.video._get_liked_user_list(vid)

@@ -96,8 +96,13 @@ class video_singal_query_testcase(unittest.TestCase):
         print self.db.add_comment('tyler', '1', 'great!!') 
         print self.db.add_comment('tyler', '1', 'great!!') 
         print self.db.get_comment('1')
-        
+
+    def test_like_video(self):
+        self.db.like_video('simsun','1')
     
+    def test_dislike_video(self):
+        self.db.like_video('simsun', '1')
+        
 if __name__ == "__main__":
     suite1 = unittest.TestLoader().loadTestsFromTestCase( \
              user_testcase)
