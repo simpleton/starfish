@@ -232,5 +232,6 @@ class mmodel(base_model):
 if __name__ == '__main__':
     now = gettime.gettime()
     print now.get()
+    tmp = mmodel()
     tmp._clear_all()
     tmp._print_all_user()
