@@ -190,9 +190,9 @@ class like_video:
         model      = mmodel()
         
         if (like == '0'):
-            model.like_video(username, vid)
+            return model.like_video(username, vid)
         else:
-            model.dislike_video(username, vid)
+            return model.dislike_video(username, vid)
         
 
 # class dislike_video:
@@ -203,6 +203,10 @@ class like_video:
 
 class comment:
     @check_video_exist_byid
-    def POST(self, vid):
-        #TODO:
-        return 'NOT IMPLEMENT'
+    def POST(self):
+        input_data = web.input()
+        username   = input_data.get('username')
+        vid        = input_data.get('video_id')
+        comment    = input_data.get('comment')
+        model      = mmodel()
+        return model.add_comment(username, vid, comment)
