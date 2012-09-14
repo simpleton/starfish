@@ -68,7 +68,7 @@ class file_upload:
             authority = upfile.get('video_is_public')
 
             print owner,place,title,authority 
-            urdir = '/video/'
+            urldir = '/video/'
             filedir = '/var/www' + urldir
 #            print owner, sha1.hexdigest(), authority, title
             if not os.path.exists(filedir):
@@ -164,17 +164,32 @@ class upload_headimage:
     def POST(self):
         input_data = web.input(head_image={})
         model = mmodel()
-        
-        
+        username = input_data.get('username')
+        if (username != None) and (model.check_user_exist_by_name(username)):
+            urldir = '/video/headimage/'
+            filedir = '/var/www' + urldir
+#            print owner, sha1.hexdigest(), authority, title
+            if not os.path.exists(filedir):
+                os.mkdir(filedir)
+
+            filepath = "%s%s.png" % (filedir, username) 
+            with open(filepath, 'wb') as image_file:
+                image_file.write(input_data.head_image.file.read())
+            
+            headimage_url = "%s%s.png" % (urldir, username)
+            return model.set_user_headimage(username, headimage_url)
+        else :
+            return 'no such user'
     
 class like_video:
     def POST(self):
-        input_data = web.intpu()
+        input_data = web.input()
         username   = input_data.get('username')
-        vid        = input_date.get('video_id')
+        vid        = input_data.get('video_id')
+        like       = input_data.get('like')
         model      = mmodel()
         
-        if (model.is_user_like_video(username, vid)):
+        if (like == '0'):
             model.like_video(username, vid)
         else:
             model.dislike_video(username, vid)

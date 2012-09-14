@@ -55,6 +55,10 @@ class mmodel(base_model):
     def _print_all_user(self):
         print self.redis_client.keys()
 
+    def set_user_headimage(self, username, image_url):
+        uid = self.user._get_user_id(username)
+        return self.user.set_headimage(uid, image_url)
+        
     def _new_video(self, owner, filepath, sha1):
         if (not self.check_user_exist_by_name(owner)):
             return -2
