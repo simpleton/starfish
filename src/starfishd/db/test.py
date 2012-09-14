@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 from db import mmodel
-from video_test import *
+from user_test import *
 from db_video import video_model
 from db_user import user_model
 import time
