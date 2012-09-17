@@ -203,7 +203,7 @@ class like_video:
 #         return 'NOT IMPLEMENT'
 
 class comment:
-    @check_video_exist_byid
+    
     def POST(self):
         input_data = web.input()
         username   = input_data.get('username')
@@ -211,3 +211,11 @@ class comment:
         comment    = input_data.get('comment')
         model      = mmodel()
         return model.add_comment(username, vid, comment)
+    
+    
+class add_following:
+    def POST(self):
+        input_data     = web.input()
+        username       = input_data.get('username')
+        following_user = input_data('following_user')
+        return model.add_follow(username, following_user)
