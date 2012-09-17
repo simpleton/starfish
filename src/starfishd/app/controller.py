@@ -213,9 +213,18 @@ class comment:
         return model.add_comment(username, vid, comment)
     
     
-class add_following:
+class add_follow:
     def POST(self):
         input_data     = web.input()
         username       = input_data.get('username')
         following_user = input_data('following_user')
+        model          = mmdoel()
         return model.add_follow(username, following_user)
+
+class del_follow:
+    def  POST(self):
+        input_data     = web.input()
+        username       = input_data.get('username')
+        following_user = input_data('following_user')
+        model          = mmodel()
+        return model.del_follow(username, following_user) 

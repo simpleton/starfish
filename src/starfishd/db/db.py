@@ -99,19 +99,33 @@ class mmodel(base_model):
             return vid
     
     def add_follow(self, selfname, friendname):
-        if (not self.check_user_exist_by_name(selfname))  \
-            or (not self.check_user_exist_by_name(friendname)):
-            return errorno.server_error(errorno.USER_NOT_EXISTED[0], \
-                                        errorno.USER_NOT_EXISTED[1]).dumps()
-        
-        selfid   = self.user._get_user_id(selfname)
-        friendid = self.user._get_user_id(friendname)
-        self._add_follow(selfid, friendid)
-    
+         if (not self.check_user_exist_by_name(selfname))  \
+             or (not self.check_user_exist_by_name(friendname)):
+             return errorno.server_error(errorno.USER_NOT_EXISTED[0], \
+                                         errorno.USER_NOT_EXISTED[1]).dumps()
+
+         selfid   = self.user._get_user_id(selfname)
+         friendid = self.user._get_user_id(friendname)
+         self._add_follow(selfid, friendid)
+
+    def del_follow(self, selfname, friendname):
+         if (not self.check_user_exist_by_name(selfname))  \
+             or (not self.check_user_exist_by_name(friendname)):
+             return errorno.server_error(errorno.USER_NOT_EXISTED[0], \
+                                         errorno.USER_NOT_EXISTED[1]).dumps()
+
+         selfid   = self.user._get_user_id(selfname)
+         friendid = self.user._get_user_id(friendname)
+         self._del_follow(selfid, friendid)
+
     def _add_follow(self, selfid, friendid):
         self.user._add_following(selfid, friendid)
         self.user._add_follower(friendid, selfid)
-        
+    
+    def _del_follow(self, selfid, friendid):
+        self.user.del_following(selfid, friendid)
+        self.user.del_follower(friendid, selfid)
+    
     @check_user_and_vid
     def like_video(self, username, videoid):
         uid = self.user._get_user_id(username)

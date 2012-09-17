@@ -27,8 +27,10 @@ urls = (
     '/video/like/',               'app.controller.like_video',
     '/video/dislike/',            'app.controller.dislike_video',
     '/video/comment/',            'app.controller.comment',
-    '/user/add/following/' ,       'app.controller.add_following'
-        
+    '/user/add/follow/' ,         'app.controller.add_follow',
+    '/user/del/follow/',          'app.contorller.del_follow'
+    
+    
     )
 app = web.application(urls, globals())
     

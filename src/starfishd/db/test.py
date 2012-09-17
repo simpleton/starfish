@@ -28,6 +28,7 @@ class video_singal_query_testcase(unittest.TestCase):
         self.db.new_video('tyler', 'video', self.SHA1+'Z', 'title', 'spot3',url='/video/1.mp4')
         self.db.add_follow('simsun', 'tyler')
         self.db.add_follow('simsun', 'juncheng')
+        self.db.del_follow('simsun', 'tyler')
         self.db.like_video('simsun', '1')
         self.db.like_video('simsun', '2')
         self.db.like_video('tyler', '1')

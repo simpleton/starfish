@@ -27,8 +27,14 @@ class user_model(base_model):
     def _add_follower(self, selfid, followerid):
         self.redis_client.sadd(':'.join([self.UID, selfid, self.FOLLOWER_LIST]), followerid)
     
+    def del_follower(self, selfid, followerid):
+        self.redis_client.srem(':'.join([self.UID, selfid, self.FOLLOWER_LIST]), followerid)
+    
     def _add_following(self, selfid, followingid):
         self.redis_client.sadd(':'.join([self.UID, selfid, self.FOLLOWING_LIST]), followingid)
+    
+    def del_following(self, selfid, followingid):
+        self.redis_client.srem(':'.join([self.UID, selfid, self.FOLLOWING_LIST]), followingid)
     
     def _get_user_likes(self, uid):
         #TODO:
