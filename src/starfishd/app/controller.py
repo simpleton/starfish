@@ -44,9 +44,10 @@ class user_add:
 class user:
     """query user dat
     """
-    def GET(self, UID):
-        tmp = db.db.get_user_base_info(UID)
-        return tmp
+    @check_user_existed_byname
+    def GET(self, username):
+        model = mmodel()
+        return model.get_user_base_info(username)
 
 class video:
     """query video info"""

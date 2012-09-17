@@ -10,7 +10,7 @@ import app.controller
 
 urls = (
     '/echo',                      'app.controller.echo_test',
-    '/user/(\d+)',                'app.controller.user',
+    '/user/(.*)',                'app.controller.user',
     '/user/add',                  'app.controller.user_add',
     '/user/friends/add',          'app.controller.friend_add',    
     '/video/(\d+)',               'app.controller.video',
