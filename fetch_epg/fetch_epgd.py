@@ -75,7 +75,13 @@ class certaintime_list:
         input_data = web.input()
         day_time   = input_data.get('daytime')
         clock_time = input_data.get('clocktime')
-        
+
+        url  = url_builder('cctv1').set_data_by_str(day_time).build()
+        model = db()
+            
+        if (not model.select(url)):
+            epg.get(day_time)
+                
         program_list,query_time = db().get_certaintime_list(clock_time, day_time)
         
         for elem in program_list:

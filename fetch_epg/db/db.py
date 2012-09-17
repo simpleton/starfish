@@ -77,8 +77,8 @@ class db:
         
     def _find_showing(self, list, time):
         """the format of the element of list is (time, program_name)"""
-#        print "==========================="
-        list.append("('24:00', 'just the end of the day')")
+        print "===========================",time
+        list.append("('24:01', 'just the end of the day')")
         mmax  = len(list) - 1
         end   = mmax
         start = 0
@@ -86,9 +86,8 @@ class db:
         time = self.mytime.str2num(time)
         #binary search.  pos == mmax will never happend
         while start <= end and end > 0 and pos <= mmax:
-            # print time
-            # print start , pos ,end
-            # print self.mytime.get_time(list, pos), self.mytime.get_time(list, pos+1)
+            print start , pos ,end
+            print self.mytime.get_time(list, pos), self.mytime.get_time(list, pos+1)
             if (self.mytime.get_time(list, pos) <= time) and  \
                (self.mytime.get_time(list, pos+1) > time):
                  break
