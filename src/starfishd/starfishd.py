@@ -10,7 +10,6 @@ import app.controller
 
 urls = (
     '/echo',                      'app.controller.echo_test',
-    '/user/(.*)',                'app.controller.user',
     '/user/add',                  'app.controller.user_add',
     '/user/friends/add',          'app.controller.friend_add',    
     '/video/(\d+)',               'app.controller.video',
@@ -28,7 +27,8 @@ urls = (
     '/video/dislike/',            'app.controller.dislike_video',
     '/video/comment/',            'app.controller.comment',
     '/user/add/follow/' ,         'app.controller.add_follow',
-    '/user/del/follow/',          'app.contorller.del_follow'
+    '/user/del/follow/',          'app.contorller.del_follow',
+    '/user/(.*)',                 'app.controller.user'
     
     
     )
