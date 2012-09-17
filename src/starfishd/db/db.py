@@ -200,7 +200,9 @@ class mmodel(base_model):
 
     def get_video_base_info(self, vid):
         baseinfo          = self.redis_client.hgetall(':'.join([self.VID, vid, self.HASH]))
+        #baseinfo only save the username , that isn't enough
         baseinfo['owner'] = self.get_user_base_info(baseinfo['owner'])
+        baseinfo['liked_num'] = self.video.get_liked_user_number(vid)
         return baseinfo
 
     def get_video_list_byuserid(self, uid):

@@ -89,6 +89,9 @@ class video_model(base_model):
     def _get_liked_user_list(self, vid):
         return self.redis_client.smembers(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]))
     
+    def get_liked_user_number(self, vid):
+        return self.redis_client.scard(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]))
+    
     def _add_comment(self, username, vid, comment):
         now = gettime.gettime()
         mcomment = {'reviewer':username, 'content':comment, 'posttime':now.get()}
