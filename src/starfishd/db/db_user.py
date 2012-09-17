@@ -53,7 +53,7 @@ class user_model(base_model):
         return self.redis_client.smembers(':'.join([self.UID, uid, self.LIKE_VIDEO_LIST]))
     
     def set_headimage(self, uid, image_url):
-        return self.redis_client.hset(':'.join([self.UID, uid, self.HASH]), self,HEADIMAGE, image_url)
+        return self.redis_client.hset(':'.join([self.UID, uid, self.HASH]), self.HEADIMAGE, image_url)
     
 if __name__ == '__main__':
     tmp = user_model()
