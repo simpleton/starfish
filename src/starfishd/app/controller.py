@@ -178,6 +178,7 @@ class upload_headimage:
                 image_file.write(input_data.head_image.file.read())
             
             headimage_url = "%s%s.png" % (urldir, username)
+            print "******headimage_url******%s %s" % (username,headimage_url)
             return model.set_user_headimage(username, headimage_url)
         else :
             return 'no such user'

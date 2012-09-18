@@ -55,6 +55,9 @@ class user_model(base_model):
     def set_headimage(self, uid, image_url):
         return self.redis_client.hset(':'.join([self.UID, uid, self.HASH]), self.HEADIMAGE, image_url)
     
+    def get_headimage(self, uid):
+        return self.redis_client.hget(':'.join([self.UID, uid, self.HASH]), self.HEADIMAGE)
+    
 if __name__ == '__main__':
     tmp = user_model()
     print tmp.UID

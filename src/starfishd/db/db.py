@@ -59,6 +59,10 @@ class mmodel(base_model):
         uid = self.user._get_user_id(username)
         return self.user.set_headimage(uid, image_url)
         
+    def get_user_headimage(self, username):
+        uid = self.user._get_user_id(username)
+        return self.user.get_headimage(uid)
+    
     def _new_video(self, owner, filepath, sha1):
         if (not self.check_user_exist_by_name(owner)):
             return -2

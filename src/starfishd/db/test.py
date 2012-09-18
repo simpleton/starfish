@@ -33,6 +33,7 @@ class video_singal_query_testcase(unittest.TestCase):
         self.db.like_video('simsun', '2')
         self.db.like_video('tyler', '1')
         self.db.like_video('juncheng', '1')
+        
 
 
     def tearDown(self):
@@ -111,6 +112,11 @@ class video_singal_query_testcase(unittest.TestCase):
         self.db.dislike_video('simsun', '1')
         self.assertFalse(self.db.is_user_like_video('simsun', '1'))
         
+    def test_modify_head_image(self):
+        testurl = '/video/test.png'
+        self.db.set_user_headimage('simsun', testurl)
+        self.assertEqual(testurl, self.db.get_user_headimage('simsun'))
+    
 if __name__ == "__main__":
     suite1 = unittest.TestLoader().loadTestsFromTestCase( \
              user_testcase)
