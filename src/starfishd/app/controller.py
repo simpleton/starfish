@@ -171,8 +171,8 @@ class upload_headimage:
             urldir  = '/video/headimage/'
             filedir = '/var/www' 
 #            print owner, sha1.hexdigest(), authority, title
-            if not os.path.exists(filedir):
-                os.mkdir(filedir)
+            if not os.path.exists(filedir+urldir):
+                os.mkdir(filedir+urldir)
                 
             imagehash.update(input_data.head_image.value)
             headimage_url = "%s%s_%s.png" % (urldir, username, imagehash.hexdigest())
