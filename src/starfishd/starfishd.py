@@ -22,12 +22,12 @@ urls = (
     '/video/user/like/(.*)',      'app.controller.video_likeby_users',
     '/video/comment/(.*)',        'app.controller.video_comment',
     '/allvideo/(.*)',             'app.controller.all_video',
-    '/user/headimage/',           'app.controller.upload_headimage',
-    '/video/like/',               'app.controller.like_video',
-    '/video/dislike/',            'app.controller.dislike_video',
-    '/video/comment/',            'app.controller.comment',
-    '/user/add/follow/' ,         'app.controller.add_follow',
-    '/user/del/follow/',          'app.contorller.del_follow',
+    '/user/headimage',           'app.controller.upload_headimage',
+    '/video/like',               'app.controller.like_video',
+    '/video/dislike',            'app.controller.dislike_video',
+    '/video/comment',            'app.controller.comment',
+    '/user/add/follow' ,         'app.controller.add_follow',
+    '/user/del/follow',          'app.contorller.del_follow',
     '/user/(.*)',                 'app.controller.user'
     
     

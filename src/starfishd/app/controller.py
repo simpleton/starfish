@@ -163,22 +163,25 @@ class all_video:
 
 class upload_headimage:
     def POST(self):
+        imagehash = hashlib.sha1()
         input_data = web.input(head_image={})
         model = mmodel()
         username = input_data.get('username')
         if (username != None) and (model.check_user_exist_by_name(username)):
-            urldir = '/video/headimage/'
-            filedir = '/var/www' + urldir
+            urldir  = '/video/headimage/'
+            filedir = '/var/www' 
 #            print owner, sha1.hexdigest(), authority, title
             if not os.path.exists(filedir):
                 os.mkdir(filedir)
-
-            filepath = "%s%s.png" % (filedir, username) 
+                
+            imagehash.update(input_data.head_image.value)
+            headimage_url = "%s%s_%s.png" % (urldir, username, imagehash.hexdigest())
+            filepath = "%s%s" % (filedir, headimage_url)
+            
             with open(filepath, 'wb') as image_file:
                 image_file.write(input_data.head_image.file.read())
             
-            headimage_url = "%s%s.png" % (urldir, username)
-            print "******headimage_url******%s %s" % (username,headimage_url)
+
             return model.set_user_headimage(username, headimage_url)
         else :
             return 'no such user'
