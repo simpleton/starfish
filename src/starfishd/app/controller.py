@@ -221,14 +221,14 @@ class add_follow:
     def POST(self):
         input_data     = web.input()
         username       = input_data.get('username')
-        following_user = input_data('following_user')
-        model          = mmdoel()
+        following_user = input_data.get('following_user')
+        model          = mmodel()
         return model.add_follow(username, following_user)
 
 class del_follow:
     def  POST(self):
         input_data     = web.input()
         username       = input_data.get('username')
-        following_user = input_data('following_user')
+        following_user = input_data.get('following_user')
         model          = mmodel()
         return model.del_follow(username, following_user) 
