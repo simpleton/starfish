@@ -1,5 +1,8 @@
 #! /usr/bin/python
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('..')
+from errorcode_builder import server_error as errorno
 import json
 import web
 import redis
@@ -12,10 +15,10 @@ from db_conf import *
 def check_user_and_vid(func):
     def check(self, username, videoid, *args):
         if (not self.check_user_exist_by_name(username)):
-            return errorno.server_error(errorno.USER_NOT_EXISTED[0], \
+            return errorno(errorno.USER_NOT_EXISTED[0], \
                                         errorno.USER_NOT_EXISTED[1]).dumps()
         elif (not self.check_video_exist_by_id(videoid)):
-            return errorno.server_error(errorno.VIDEO_NOT_EXISTED[0], \
+            return errorno(errorno.VIDEO_NOT_EXISTED[0], \
                                         errorno.VIDEO_NOT_EXISTED[1]).dumps()
         else:
             return func(self, username, videoid, *args)
@@ -33,20 +36,12 @@ class mmodel(base_model):
         return self.video._check_video_existed(vid)
 
     def new_user(self, username, head_image):
-        if (self.redis_client.exists(':'.join([self.USERNAME,username,self.UID]))):
-            #already in database
-            return False
-        else :
-            userid = str(self.redis_client.incr(self.GLOBAL_USERID_FLAG))
-            print ':'.join([self.USERNAME,username,self.UID])
-
-            self.redis_client.set(':'.join([self.USERNAME, username,  self.UID]), userid)
-            userinfo = {self.USERNAME  : username,
-                        self.HEADIMAGE : head_image,
-                        self.UID       :userid}
-            self.redis_client.hmset(':'.join([self.UID, userid, self.HASH]), userinfo)
-            return True
-
+        return self.user.new_user(username, head_image)
+        
+    def del_user(self, username):
+        uid = self.user._get_user_id(username)
+        return self.user.remove_user(uid)
+        
     def get_user_base_info(self, username):
         #self.redis_client.get(':'.join([self.USERNAME, username,  self.UID]))
         uid = self.user._get_user_id(username)
@@ -64,43 +59,14 @@ class mmodel(base_model):
         return self.user.get_headimage(uid)
     
     def _new_video(self, owner, filepath, sha1):
-        if (not self.check_user_exist_by_name(owner)):
-            return -2
-        elif (not self.redis_client.exists(':'.join([self.VIDEO_SHA1, sha1, self.VID]))):
-            vid = str(self.redis_client.incr(self.GLOBAL_VIDEOID_FLAG))
-            self.video._init_empty_video_info(vid)
-            self.redis_client.set(':'.join([self.VIDEO_SHA1, sha1, self.VID]), vid)
-
-            now  = gettime.gettime()
-            self.redis_client.set(':'.join([self.VID, vid, self.PUBLIC_TIME]), now.get())
-            
-            info = {self.VID        :vid, 
-                    self.VIDEO_SHA1 :sha1, 
-                    self.OWNER      :owner, 
-                    self.PUBLIC_TIME:now.get()}
-            self.redis_client.hmset(':'.join([self.VID, vid, self.HASH]), info)
-
-            uid = self.user._get_user_id(owner)
-            self.redis_client.lpush(':'.join([self.UID, uid, self.VIDEO_LIST]), vid)
-            return vid
-        else:
-            #already in database
-            return -1
+        return self.video._new_video(owner, filepath, sha1)
     
     def new_video(self, owner, filepath, sha1, title, spot, is_hot='0', \
                   is_public='1',url='/video/1.mp4',thumb_url='/video/default.png'):
-                  
-        vid = self._new_video(owner, filepath, sha1)
-        if (vid > 0):
-            self.video._set_video_spot(vid, spot)
-            self.video._set_video_title(vid, title)
-            self.video._set_video_popular(vid, is_hot)
-            self.video._set_video_public(vid, is_public)
-            self.video._set_video_url(vid, url)
-            self.video._set_video_thumb(vid, thumb_url)
-            return vid
-        else :
-            return vid
+        return self.video.new_video(owner, filepath, sha1, title, spot ,is_hot, is_public, url, thumb_url)
+    
+    def del_video(self, vid):
+        self.video._del_video(vid)
     
     def add_follow(self, selfname, friendname):
          if (not self.check_user_exist_by_name(selfname))  \
@@ -163,7 +129,7 @@ class mmodel(base_model):
             userlist = self.video._get_liked_user_list(vid)
             return json.dumps(self._get_json_user_list(userlist))
         else:
-            return server_error(1,"no such user").dumps()
+            return errorno(1,"no such user").dumps()
 
     def get_user_like_video_list(self, username):
         uid     = self.user._get_user_id(username)
@@ -262,5 +228,5 @@ if __name__ == '__main__':
     now = gettime.gettime()
     print now.get()
     tmp = mmodel()
-    tmp._clear_all()
+    #tmp._clear_all()
     tmp._print_all_user()

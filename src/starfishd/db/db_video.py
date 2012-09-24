@@ -14,8 +14,47 @@ class video_model(base_model):
                 self.OWNER:'null', self.VID:'null'}
         self.redis_client.hmset(':'.join([self.VID, vid, self.HASH]), item)
         
+    def _new_video(self, owner, filepath, sha1):
+        if (not self.user_model._check_user_exist_by_name(owner)):
+            return -2
+        elif (not self.redis_client.exists(':'.join([self.VIDEO_SHA1, sha1, self.VID]))):
+            vid = str(self.redis_client.incr(self.GLOBAL_VIDEOID_FLAG))
+            self._init_empty_video_info(vid)
+            self.redis_client.set(':'.join([self.VIDEO_SHA1, sha1, self.VID]), vid)
+
+            now  = gettime.gettime()
+            self.redis_client.set(':'.join([self.VID, vid, self.PUBLIC_TIME]), now.get())
+            
+            info = {self.VID        :vid, 
+                    self.VIDEO_SHA1 :sha1, 
+                    self.OWNER      :owner, 
+                    self.PUBLIC_TIME:now.get()}
+            self.redis_client.hmset(':'.join([self.VID, vid, self.HASH]), info)
+
+            uid = self.user_model._get_user_id(owner)
+            self.redis_client.lpush(':'.join([self.UID, uid, self.VIDEO_LIST]), vid)
+            return vid
+        else:
+            #already in database
+            return -2
+    
+    
+    def new_video(self, owner, filepath, sha1, title, spot, is_hot, \
+                  is_public, url, thumb_url):
+        vid = self._new_video(owner, filepath, sha1)
+        if (vid > 0):
+            self._set_video_spot(vid, spot)
+            self._set_video_title(vid, title)
+            self._set_video_popular(vid, is_hot)
+            self._set_video_public(vid, is_public)
+            self._set_video_url(vid, url)
+            self._set_video_thumb(vid, thumb_url)
+            return vid
+        else :
+            return vid
+    
     def _key_vid(self, vid):
-        return ':'.join([self.VID, vid, self.HASH])
+        return ':'.join([self.VID, str(vid), self.HASH])
         
     def _check_video_existed(self, vid):
         if self.redis_client.exists(self._key_vid(vid)):
@@ -73,15 +112,19 @@ class video_model(base_model):
         return self.redis_client.hget(self._key_vid(vid), self.VIDEO_SHA1)
 
     def _del_video(self, vid):
-        sha1 = _get_video_sha1(vid)
+        sha1 = self._get_video_sha1(vid)
         self.redis_client.delete(self._key_vid(vid))
-        self.redis_client.delete(':'.join([self.VIDEO_SHA1, sha1, self.VID]))
+        self.redis_client.delete(':'.join([self.VIDEO_SHA1, str(sha1), self.VID]))
+        self.redis_client.delete(':'.join([self.VID, vid, self.PUBLIC_TIME]))
+        self.redis_client.delete(':'.join([self.VID, vid, self.COMMENT]))
 
     def _add_liked_user(self, vid, uid):
         self.redis_client.sadd(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]), uid)
-
+        print self._get_liked_user_list(vid)
+        
     def _remove_liked_user(self, vid, uid):
         self.redis_client.srem(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]), uid)
+        print self._get_liked_user_list(vid)
 
     def is_liked_user(self, vid, uid):
         return self.redis_client.sismember(':'.join([self.VID, vid, self.LIKED_VIDEO_USER_LIST]), uid)
@@ -107,7 +150,3 @@ class video_model(base_model):
             comment_list[i] = elem
         return comment_list
 
-if __name__ == '__main__':
-    tmp = video_model()
-    tmp._get_comment('1')
-    print tmp.UID

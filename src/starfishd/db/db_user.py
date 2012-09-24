@@ -3,6 +3,25 @@
 from db_conf import *
 
 class user_model(base_model):
+    def new_user(self, username, head_image):
+        if (self.redis_client.exists(':'.join([self.USERNAME,username,self.UID]))):
+            print 'already in database'
+            return False
+        else :
+            userid = str(self.redis_client.incr(self.GLOBAL_USERID_FLAG))
+            self.redis_client.set(':'.join([self.USERNAME, username,  self.UID]), userid)
+            userinfo = {self.USERNAME  : username,
+                        self.HEADIMAGE : head_image,
+                        self.UID       :userid}
+            self.redis_client.hmset(':'.join([self.UID, userid, self.HASH]), userinfo)
+            return True
+        
+    def remove_user(self, uid):
+        username = self._get_user_name(uid)
+        self.redis_client.delete(':'.join([self.UID, uid, self.HASH]))
+        self.redis_client.delete(':'.join([self.USERNAME, username, self.UID]))
+        self.redis_client.delete(':'.join([self.UID, uid, self.VIDEO_LIST]))
+    
     def _check_user_exist_by_name(self,username):
         return self.redis_client.exists(':'.join([self.USERNAME, username, self.UID]))
 
