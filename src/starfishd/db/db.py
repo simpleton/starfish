@@ -71,8 +71,8 @@ class mmodel(base_model):
     def add_follow(self, selfname, friendname):
          if (not self.check_user_exist_by_name(selfname))  \
              or (not self.check_user_exist_by_name(friendname)):
-             return errorno.server_error(errorno.USER_NOT_EXISTED[0], \
-                                         errorno.USER_NOT_EXISTED[1]).dumps()
+             return errorno(errorno.USER_NOT_EXISTED[0], \
+                            errorno.USER_NOT_EXISTED[1]).dumps()
 
          selfid   = self.user._get_user_id(selfname)
          friendid = self.user._get_user_id(friendname)

@@ -4,9 +4,6 @@ __author__ = 'simsun'
 
 import web
 
-
-
-
 class server_error:
     USER_NOT_EXISTED = 101, 'user not existed'
 
