@@ -48,10 +48,12 @@ http//127.0.0.1:9090是starfishd接收请求的url,
 
 just for test 
 --------------
-`python db/db.py` for clean the DB
+`python starfish/src/starfishd/db/db.py` for dispaly all key store in redis
 
-`python db/test.py` for run unittest and make moc date
+`python starfish/src/starfishd/db/test.py` for run unittest 
 
-please put the video in /var/www/video folder
+`python starfish/src/starfishd/mockdate.py` for mock user date
+
+please mkdir `/var/www/video` folder which will store the video that user loaded. Then the user headimage will store in `/var/www/video/headimage`
 
 **must change the file mod to 755 , unless u will recevie 403 error when u try to access file **
